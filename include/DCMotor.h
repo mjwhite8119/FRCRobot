@@ -1,7 +1,7 @@
 #ifndef _DC_MOTOR_H_
 #define _DC_MOTOR_H_
 
-#include "config.h"
+// #include "config.h"
     
 class DCMotor
 {

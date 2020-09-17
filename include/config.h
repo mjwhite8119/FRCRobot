@@ -31,4 +31,22 @@ static struct MotorPins {
 const int freq = 30000;
 const int resolution = 8;
 
+// -------------------------------------------------------//
+// OLED configuration                                     //
+// -------------------------------------------------------//
+#define USE_OLED true
+#define HELTEC_WIFI_KIT_32 false
+#define NODEMCU_32S true
+
+#if USE_OLED
+  // Library used for OLED
+  #if (HELTEC_WIFI_KIT_32 || TTGO_LORA32_OLED)
+    #define HELTEC true
+    #define USE_U8G2 false
+  #else  
+    #define USE_U8G2 true
+    #define HELTEC false
+  #endif   
+#endif
+
 #endif // _CONFIG_H_

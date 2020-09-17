@@ -16,11 +16,19 @@ class Robot
     DriveTrain driveTrain;
 
     void forward() {
-      driveTrain.setWheelSpeeds(1, 1, 200, 200);
+      driveTrain.setWheelSpeeds(1, 1, 180, 178);
     }
 
     void backward() {
-      driveTrain.setWheelSpeeds(-1, -1, 200, 200);
+      driveTrain.setWheelSpeeds(-1, -1, 180, 179);
+    }
+
+    void left() {
+      driveTrain.setWheelSpeeds(-1, 1, 170, 170);
+    }
+
+    void right() {
+      driveTrain.setWheelSpeeds(1, -1, 170, 170);
     }
 
     void stop() {

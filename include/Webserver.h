@@ -14,6 +14,8 @@ String header;
 // Auxiliar variables to store the current output state
 String forwardState = "stop";
 String backwardState = "stop";
+String leftState = "stop";
+String rightState = "stop";
 
 // Current time
 unsigned long currentTime = millis();
@@ -75,20 +77,36 @@ void handleWebServer(Robot robot)
             if (header.indexOf("GET /forward/start") >= 0) {
               forwardState = "start";
               digitalWrite(LED_BUILTIN, HIGH);
-              robot.forward();
-            } else if (header.indexOf("GET /forward/stop") >= 0) {
-              forwardState = "stop";
-              digitalWrite(LED_BUILTIN, LOW);
-              robot.stop();
+              robot.forward();         
             } else if (header.indexOf("GET /backward/start") >= 0) {
               backwardState = "start";
               digitalWrite(LED_BUILTIN, HIGH);
               robot.backward();
+            } else if (header.indexOf("GET /left/start") >= 0) {
+              leftState = "start";
+              digitalWrite(LED_BUILTIN, HIGH);
+              robot.left();
+            } else if (header.indexOf("GET /right/start") >= 0) {
+              rightState = "start";
+              digitalWrite(LED_BUILTIN, HIGH);
+              robot.right();  
+            } else if (header.indexOf("GET /forward/stop") >= 0) {
+              forwardState = "stop";
+              digitalWrite(LED_BUILTIN, LOW);
+              robot.stop();
             } else if (header.indexOf("GET /backward/stop") >= 0) {
               backwardState = "stop";
               digitalWrite(LED_BUILTIN, LOW);
               robot.stop();
-            }
+            } else if (header.indexOf("GET /left/stop") >= 0) {
+              leftState = "stop";
+              digitalWrite(LED_BUILTIN, LOW);
+              robot.stop();
+            } else if (header.indexOf("GET /right/stop") >= 0) {
+              rightState = "stop";
+              digitalWrite(LED_BUILTIN, LOW);
+              robot.stop();      
+            }          
             
             // Display the HTML page header and CSS
             displayHeader(client);
@@ -106,6 +124,22 @@ void handleWebServer(Robot robot)
             } else {
               client.println("<p><a href=\"/backward/stop\"><button class=\"button button2\">Stop</button></a></p>");
             }
+
+
+            // If the forwardState is stop, it displays the START button       
+            if (leftState=="stop") {
+              client.println("<p><a href=\"/left/start\"><button class=\"button\">Left</button></a></p>");
+            } else {
+              client.println("<p><a href=\"/left/stop\"><button class=\"button button2\">Stop</button></a></p>");
+            } 
+            
+            // If the backwardState is stop, it displays the START button       
+            if (rightState=="stop") {
+              client.println("<p><a href=\"/right/start\"><button class=\"button\">Right</button></a></p>");
+            } else {
+              client.println("<p><a href=\"/right/stop\"><button class=\"button button2\">Stop</button></a></p>");
+            }
+
             client.println("</body></html>");
             
             // The HTTP response ends with another blank line

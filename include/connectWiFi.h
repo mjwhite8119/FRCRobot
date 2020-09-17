@@ -13,6 +13,9 @@ inline const char* password = "xufxbhsa7nc9ct";
 ////////////////////////////////////////////////
 inline void connectWiFi(uint8_t wifi_mode=0)
 {
+  drawText(1, 0, "Connecting...");
+  drawText(2, 0, String(ssid));
+
   WiFi.disconnect();
   delay(1000); 
     
@@ -41,8 +44,16 @@ inline void connectWiFi(uint8_t wifi_mode=0)
     Serial.println("WiFi connected");  
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
+    
+    clearDisplayBelowHeader();
+    drawText(1, 0, "Connected");
+    drawIPAddress(2, 0, WiFi.localIP());
+    // drawText(2, 0, "IP Address");drawText(2, 62, String(WiFi.localIP()[3]));
+    // Add the WiFi icon
+    drawWiFi();
   } 
   else {
+    drawText(1, 0, "WiFi connect failed!");
     Serial.println("WiFi connect failed!");
   }  
 }
@@ -53,10 +64,16 @@ inline void connectWiFi(uint8_t wifi_mode=0)
 inline void setupOTA()
 {
   
-  ArduinoOTA.onStart([](){});
+  ArduinoOTA.onStart([](){
+    clearDisplay();
+    drawText(0, 0, "Started updating...");
+  });
 
   ArduinoOTA.onEnd([]()
   {
+    clearDisplay();
+    drawText(0, 0, "Update Complete!");
+
     ESP.restart();
   });
 
@@ -97,6 +114,7 @@ inline void setupOTA()
   });
 
   ArduinoOTA.begin();
+  drawText(3, 0, "Started OTA");
 }
 
 

@@ -1,4 +1,6 @@
 #include <Arduino.h>
+#include "config.h"
+#include "OLED.h"
 #include "connectWiFi.h"
 #include "WebServer.h"
 #include "Robot.h"
@@ -12,7 +14,13 @@ Robot robot;
 void setup() {
 
   Serial.begin(115200); while(!Serial && !Serial.available()){}
+
   pinMode(LED_BUILTIN, OUTPUT);
+
+  // Setup the OLED.
+  #if USE_OLED
+    setupOLED();
+  #endif
 
   // Connect to Wifi
   connectWiFi();
