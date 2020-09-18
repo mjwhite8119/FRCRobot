@@ -5,8 +5,8 @@
 #include <ArduinoOTA.h>
 
 inline bool connectToWiFiRouter = true;
-inline const char* ssid = "CenturyLink9329";
-inline const char* password = "xufxbhsa7nc9ct";
+inline const char* ssid = "SSID";
+inline const char* password = "PASSWORD";
 
 ////////////////////////////////////////////////
 // Connect to WiFi. STA(0), AP(1), AP_STA(2)  //
