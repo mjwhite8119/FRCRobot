@@ -25,7 +25,7 @@ void setup() {
   // Connect to Wifi
   connectWiFi();
 
-  // Setup for Over-the-Air uploads
+  // Setup for Over-the-Air updates
   setupOTA();
 
   // Begin the WebServer

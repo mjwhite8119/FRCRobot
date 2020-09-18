@@ -10,7 +10,13 @@ class Wheel
     // Default constructor
     Wheel() {}
     
-    // Constructor for powered wheels   
+    /**
+     * Constructor for powered wheels.  The pin group is passed 
+     * onto the motor to connect the GPIO pins.
+     * 
+     * @param pinGroup  GPIO pin group for this wheel.
+     * 
+     */ 
     Wheel(const uint8_t pinGroup) 
       :motor(pinGroup) {}
 

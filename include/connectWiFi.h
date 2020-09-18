@@ -6,12 +6,15 @@
 #include "wifiConfig.h"
 
 inline bool connectToWiFiRouter = true;
+// Uncomment the next 2 lines and enter your WiFi SSID & password
 // inline const char* ssid = "SSID";
 // inline const char* password = "PASSWORD";
 
-////////////////////////////////////////////////
-// Connect to WiFi. STA(0), AP(1), AP_STA(2)  //
-////////////////////////////////////////////////
+/**
+ * Connect to WiFi. 
+ * 
+ * @param wifi_mode STA(0), AP(1), AP_STA(2)
+ */ 
 inline void connectWiFi(uint8_t wifi_mode=0)
 {
   drawText(1, 0, "Connecting...");
@@ -59,9 +62,12 @@ inline void connectWiFi(uint8_t wifi_mode=0)
   }  
 }
 
-//////////////////////
-// Setup OTA        //
-//////////////////////
+/**
+ * Setup for Over-the-Air updates.
+ * This allows you to update the code without being
+ * connected via the USB cable. 
+ * 
+ */ 
 inline void setupOTA()
 {
   

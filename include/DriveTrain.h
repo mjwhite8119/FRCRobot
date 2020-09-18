@@ -10,12 +10,20 @@ class DriveTrain
     // Constructor
     DriveTrain() {}
 
-    const uint8_t leftWheelPinGroup = 0; // GPIO pin group config.h
-    const uint8_t rightWheelPinGroup = 1; // GPIO pin group config.h
+    const uint8_t leftWheelPinGroup = 0; // GPIO pin group. See config.h
+    const uint8_t rightWheelPinGroup = 1; // GPIO pin group. See config.h
     
-    Wheel leftWheel = Wheel(leftWheelPinGroup);
-    Wheel rightWheel = Wheel(rightWheelPinGroup);
+    Wheel leftWheel = Wheel(leftWheelPinGroup); // Attach the left wheel
+    Wheel rightWheel = Wheel(rightWheelPinGroup); // Attach the right wheel
 
+    /**
+     * Sets the direction and wheel speed for the motors.
+     *
+     * @param leftDir  Direction for left motor.
+     * @param rightDir Direction for right motor.
+     * @param leftWheelSpeed The PWM value to send to the left motor.
+     * @param rightWheelSpeed The PWM value to send to the right motor.
+     */
     void setWheelSpeeds(const int leftDir,
                         const int rightDir,
                         const float leftWheelSpeed, 

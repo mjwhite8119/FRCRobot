@@ -30,6 +30,7 @@ inline void clearRect(const uint16_t x, const uint16_t y, const uint16_t width, 
 #endif  
 }
 
+// Clears part of a line
 inline void clearLinePart(const uint16_t lineNumber, const uint16_t startPosition, const uint16_t width)
 {
 #if USE_OLED  
@@ -39,6 +40,7 @@ inline void clearLinePart(const uint16_t lineNumber, const uint16_t startPositio
 #endif  
 }
 
+// Clears a single line
 inline void clearLine(const uint16_t lineNumber)
 {
 #if USE_OLED  
@@ -46,6 +48,7 @@ inline void clearLine(const uint16_t lineNumber)
 #endif  
 }
 
+// Draw text to the display
 inline void drawText(const uint16_t lineNumber, const uint16_t startPosition, String text) {
 #if USE_OLED  
   const uint16_t lineWidth = 10;
@@ -64,6 +67,7 @@ inline void drawText(const uint16_t lineNumber, const uint16_t startPosition, St
 #endif   
 }
 
+// Draws the bitmap images that are in the images.h file
 inline void drawBitmap(const uint16_t x, const uint16_t y, const uint16_t width, const uint16_t height, const unsigned char* bm_bits) 
 {
 #if USE_OLED  
@@ -79,12 +83,14 @@ inline void clearDisplay() {
 #endif  
 }
 
+// Clears all the lines below the top header line
 inline void clearDisplayBelowHeader() {
 #if USE_OLED  
   clearRect(0, 10, SCREEN_WIDTH, SCREEN_HEIGHT-10);
 #endif  
 }
 
+// Draws a battery icon in the top right corner
 inline void drawBattery(const uint16_t x=108, const uint16_t y=0, const uint8_t capacity=3) {
 #if USE_OLED 
   clearLinePart(0, x, y);
@@ -98,30 +104,14 @@ inline void drawBattery(const uint16_t x=108, const uint16_t y=0, const uint8_t 
 #endif  
 }
 
+// If the ESP is setup in AP mode then this display an icon
 inline void drawAP(const uint16_t x=90, const uint16_t y=0) {
 #if USE_OLED  
   drawBitmap(x, y, AP_width, AP_height, AP_bits);
 #endif  
 }
 
-inline void drawSerial(const uint16_t x=45, const uint16_t y=0) {
-#if USE_OLED  
-  drawBitmap(x, y, SERIAL_width, SERIAL_height, SERIAL_bits);
-#endif  
-}
-
-inline void drawMQTT(const uint16_t x=48, const uint16_t y=0) {
-#if USE_OLED  
-  drawBitmap(x, y, MQTT_width, MQTT_height, MQTT_bits);
-#endif  
-}
-
-inline void drawLORA(const uint16_t x=35, const uint16_t y=0) {
-#if USE_OLED  
-  drawBitmap(x, y, LORA_width, LORA_height, LORA_bits);
-#endif  
-}
-
+// Draws a little WiFi icon in the top left corner
 inline void drawWiFi(const uint16_t x=0, const uint16_t y=0) {
 #if USE_OLED  
   clearLinePart(0, 0, 20);
@@ -138,15 +128,16 @@ inline void clearWiFi(const uint16_t x=0, const uint16_t y=0) {
 #endif  
 }
 
+// Convenience function for displaying the IP address
 inline void drawIPAddress(const uint16_t lineNumber, const uint16_t startPosition, const IPAddress ip) {
 #if USE_OLED  
   drawText(lineNumber, startPosition, String(ip[0]) + "." + String(ip[1]) + "." + String(ip[2]) + "." + String(ip[3]));
 #endif  
 }
 
-//******************************************************//
-// setup oled
-// *****************************************************//
+/**
+ * Setup the OLED display
+ */ 
 inline void setupOLED()
 {
   // start the display

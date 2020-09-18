@@ -9,7 +9,11 @@ class DCMotor
         
     DCMotor() {} // Default constructor
 
-    // Constructor to connect motor GPIO pins to microcontroller
+    /**
+     * Constructor. Connects motor GPIO pins to microcontroller
+     *
+     * @param pinGroup  GPIO pin group for this motor.
+     */
     explicit DCMotor(const uint8_t pinGroup)
         :pinGroup_(pinGroup)
     {   
@@ -23,6 +27,12 @@ class DCMotor
       ledcAttachPin(motorPinGroup[pinGroup_].enable, pinGroup_); // attach channel to pin;
     }
 
+    /**
+     * Apply power to the motor
+     * 
+     * @param dir Direction of motor.
+     * @param PWM The PWM value to send to the motor.
+     */
     void applyPower(const int dir, const int PWM) {
       int level;
       if(dir >= 0) {
