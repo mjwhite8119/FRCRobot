@@ -3,10 +3,11 @@
 
 #include <WiFi.h> 
 #include <ArduinoOTA.h>
+#include "wifiConfig.h"
 
 inline bool connectToWiFiRouter = true;
-inline const char* ssid = "SSID";
-inline const char* password = "PASSWORD";
+// inline const char* ssid = "SSID";
+// inline const char* password = "PASSWORD";
 
 ////////////////////////////////////////////////
 // Connect to WiFi. STA(0), AP(1), AP_STA(2)  //
@@ -46,9 +47,9 @@ inline void connectWiFi(uint8_t wifi_mode=0)
     Serial.println(WiFi.localIP());
     
     clearDisplayBelowHeader();
-    drawText(1, 0, "Connected");
+    drawText(1, 0, "Connected to");
     drawIPAddress(2, 0, WiFi.localIP());
-    // drawText(2, 0, "IP Address");drawText(2, 62, String(WiFi.localIP()[3]));
+
     // Add the WiFi icon
     drawWiFi();
   } 
@@ -114,7 +115,7 @@ inline void setupOTA()
   });
 
   ArduinoOTA.begin();
-  drawText(3, 0, "Started OTA");
+  // drawText(3, 0, "Started OTA");
 }
 
 

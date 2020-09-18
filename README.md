@@ -39,5 +39,7 @@ The links in this BOM will show multiple pieces for most products.  It's assumed
 # <a name="build"></a>Robot Construction
 Well, here's what I have so far... Probably not the final build but it shows all of the hardward components that will be on the robot.
 
+![Robot photo](images/FRCRobot/FRCRobot.002.jpeg)
+
 # <a name="wiring"></a>Wiring Diagram
 Yep! as soon as I have a final build.
