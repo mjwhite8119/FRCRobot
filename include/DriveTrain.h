@@ -24,13 +24,11 @@ class DriveTrain
      * @param leftWheelSpeed The PWM value to send to the left motor.
      * @param rightWheelSpeed The PWM value to send to the right motor.
      */
-    void setWheelSpeeds(const int leftDir,
-                        const int rightDir,
-                        const float leftWheelSpeed, 
+    void setWheelSpeeds(const float leftWheelSpeed, 
                         const float rightWheelSpeed) 
     {  
-      leftWheel.motor.applyPower(leftDir, leftWheelSpeed); 
-      rightWheel.motor.applyPower(rightDir, rightWheelSpeed); 
+      leftWheel.motor.applyPower(sgn(leftWheelSpeed), leftWheelSpeed); 
+      rightWheel.motor.applyPower(rightWheelSpeed); 
     }
 
 };

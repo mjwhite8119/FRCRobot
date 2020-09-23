@@ -3,6 +3,8 @@
 
 // -------------- Hardware interfaces ----------------
 
+int LED_BUILTIN = 2;
+
 //----------------------------------
 // Include timer interrupt code
 //----------------------------------

@@ -18,36 +18,49 @@ class Robot
     /**
      * Move robot forward
      */ 
-    void forward() {
-      driveTrain.setWheelSpeeds(1, 1, 180, 178);
+    void forward(const int period) {
+      driveTrain.setWheelSpeeds(180, 178);
+      digitalWrite(LED_BUILTIN, HIGH);
+      delay(period);
+      stop();
     }
 
     /**
      * Move robot backward
      */ 
-    void backward() {
-      driveTrain.setWheelSpeeds(-1, -1, 180, 179);
+    void backward(const int period) {
+      driveTrain.setWheelSpeeds(180, 179);
+      digitalWrite(LED_BUILTIN, HIGH);
+      delay(period);
+      stop();
     }
 
     /**
      * Spin the robot to the left
      */ 
-    void left() {
-      driveTrain.setWheelSpeeds(-1, 1, 170, 170);
+    void left(const int period) {
+      driveTrain.setWheelSpeeds(170, 170);
+      digitalWrite(LED_BUILTIN, HIGH);
+      delay(period);
+      stop();
     }
 
     /**
      * Spin the robot to the right
      */ 
-    void right() {
-      driveTrain.setWheelSpeeds(1, -1, 170, 170);
+    void right(const int period) {
+      driveTrain.setWheelSpeeds(170, 170);
+      digitalWrite(LED_BUILTIN, HIGH);
+      delay(period);
+      stop();
     }
 
     /**
      * Stop the robot
      */ 
     void stop() {
-      driveTrain.setWheelSpeeds(0, 0, 0 ,0);
+      driveTrain.setWheelSpeeds(0, 0);
+      digitalWrite(LED_BUILTIN, LOW);
     }
 };
 

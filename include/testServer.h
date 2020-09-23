@@ -7,8 +7,10 @@
 WiFiServer server(80);
 WiFiClient client;
 
+int LED_BUILTIN = 2;
+
 // Variable to store the HTTP request
-std::string header;
+String header;
 
 // Auxiliar variables to store the current output state
 String forwardState = "stop";
@@ -27,38 +29,34 @@ const long timeoutTime = 2000;
 // Display the CSS
 // ----------------------------------------------------------
 void writeCSS() {
+  // CSS to style the on/off buttons 
   client.println("<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}");
-  client.println(".button { background-color: #4CAF50; width: 50px; border: none; color: white; padding: 16px 40px 16px 50px;");
-  client.println("text-decoration: none; font-size: 30px; margin: 2px; text-align: center; cursor: pointer;}");
-  client.println(".button2 {background-color: #555555;}");
-  client.println(".container { padding: 10px; position: relative; border: 1px; margin: 10px; }");
-  client.println("</style></head>");
+  client.println(".button { background-color: #4CAF50; width: 200px; border: none; color: white; padding: 16px 40px;");
+  client.println("text-decoration: none; font-size: 30px; margin: 2px; cursor: pointer;}");
+  client.println(".button2 {background-color: #555555;}</style></head>");
+  client.println(".container { padding: 10px; position: relative; margin: 10px; }");
 }
 
 // ----------------------------------------------------------
-// Display the HTML page header and CSS
+// Display a button
 // ----------------------------------------------------------
-void displayHeader() {
-
-  // Display the HTML web page
-  client.println("<!DOCTYPE html><html>");
-  client.println("<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
-  client.println("<link rel=\"icon\" href=\"data:,\">");
-
-  // CSS style
-  writeCSS();
-  
-  // Web Page Heading
-  client.println("<body><h1>ESP32 Robot</h1>");
+String formatButton(String name, String url) {
+  String s = "<p><a href=\"" + url + "\"><button class=\"button3\">" + name + "</button></a></p>";
 }
 
-void actionButtons() {
-
+// ----------------------------------------------------------
+// Display Motion buttons
+// ----------------------------------------------------------
+void printMotionButtons(WiFiClient client) {
   // If the forwardState is stop, it displays the START button       
   if (forwardState=="stop") {
-    client.println("<p><a href=\"/forward/start\"><button class=\"button\">Forward&nbsp;</button></a></p>");
+    String s = formatButton("Forward", "/forward/start");
+    client.println(s);
+    // client.println("<p><a href=\"/forward/start\"><button class=\"button\">Forward&nbsp;</button></a></p>");
   } else {
-    client.println("<p><a href=\"/forward/stop\"><button class=\"button button2\">Stop</button></a></p>");
+    String s = formatButton("Stop", "/forward/stop");
+    client.println(s);
+    // client.println("<p><a href=\"/forward/stop\"><button class=\"button button2\">Stop</button></a></p>");
   } 
   
   // If the backwardState is stop, it displays the START button       
@@ -84,11 +82,19 @@ void actionButtons() {
 }
 
 // ----------------------------------------------------------
-// Display a button
+// Display the HTML page header and CSS
 // ----------------------------------------------------------
-void printButton(String name, String url) {
-  String s = "<span><a href=\"" + url + "\"><button class=\"button\">" + name + "</button></a></span>";
-  client.println(s);
+void displayHeader(WiFiClient client) {
+
+  // Display the HTML web page
+  client.println("<!DOCTYPE html><html>");
+  client.println("<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
+  client.println("<link rel=\"icon\" href=\"data:,\">");
+  
+  writeCSS();
+
+  // Web Page Heading
+  client.println("<body><h1>ESP32 Robot</h1>");
 }
 
 // ----------------------------------------------------------
@@ -96,7 +102,7 @@ void printButton(String name, String url) {
 // ----------------------------------------------------------
 void handleWebServer(Robot robot) 
 {
-  client = server.available();   
+  WiFiClient client = server.available();   
 
   if (client) {                             // If a new client connects,
     currentTime = millis();
@@ -119,35 +125,60 @@ void handleWebServer(Robot robot)
             client.println("Content-type:text/html");
             client.println("Connection: close");
             client.println();
-
-            int pos = header.find("/", 5);
-            Serial.print("position = "); Serial.println(pos);
-            std::string x = header.substr(pos+1, 2);
-            Serial.println("=== header ====");
-            Serial.println(header.c_str());
-            Serial.print("X="); Serial.println(x.c_str());
-            int period = stoi(x);
-            Serial.print("D="); Serial.println(period);
             
+            String x = header.substring(header.lastIndexOf("/"), 2);
+            Serial.println("=== header ====");
+            Serial.println(header);
+            Serial.println("=== current Line ====");
+            Serial.println(currentLine);
+            Serial.print("X="); Serial.println(x);
+
             // Control the robot action
-            if (header.find("GET /forward") >= 0) {
-              robot.forward(period);         
-            } else if (header.find("GET /backward") >= 0) {
-              robot.backward(period);
-            } else if (header.find("GET /left") >= 0) {
-              robot.left(period);
-            } else if (header.find("GET /right") >= 0) {
-              robot.right(period);  
-            } 
+            if (header.indexOf("GET /forward/start") >= 0) {
+              forwardState = "start";
+              digitalWrite(LED_BUILTIN, HIGH);
+              robot.forward();         
+            } else if (header.indexOf("GET /backward/start") >= 0) {
+              backwardState = "start";
+              digitalWrite(LED_BUILTIN, HIGH);
+              robot.backward();
+            } else if (header.indexOf("GET /left/start") >= 0) {
+              leftState = "start";
+              digitalWrite(LED_BUILTIN, HIGH);
+              robot.left();
+            } else if (header.indexOf("GET /right/start") >= 0) {
+              rightState = "start";
+              digitalWrite(LED_BUILTIN, HIGH);
+              robot.right();  
+            } else if (header.indexOf("GET /forward/stop") >= 0) {
+              forwardState = "stop";
+              digitalWrite(LED_BUILTIN, LOW);
+              robot.stop();
+            } else if (header.indexOf("GET /backward/stop") >= 0) {
+              backwardState = "stop";
+              digitalWrite(LED_BUILTIN, LOW);
+              robot.stop();
+            } else if (header.indexOf("GET /left/stop") >= 0) {
+              leftState = "stop";
+              digitalWrite(LED_BUILTIN, LOW);
+              robot.stop();
+            } else if (header.indexOf("GET /right/stop") >= 0) {
+              rightState = "stop";
+              digitalWrite(LED_BUILTIN, LOW);
+              robot.stop();      
+            }          
             
             // Display the HTML page header and CSS
-            displayHeader();
+            displayHeader(client);
             
             String s;
             client.println("<div class=\"container\">");
-            printButton("1", "/forward/1");
-            printButton("2", "/forward/2");
-            printButton("3", "/forward/3");
+            s = formatButton("1", "/forward/1");
+            client.println(s);
+            s = formatButton("2", "/forward/2");
+            client.println(s);
+            s = formatButton("3", "/forward/3");
+            client.println(s);
             client.println("</div>");
 
             client.println("</body></html>");
@@ -172,41 +203,5 @@ void handleWebServer(Robot robot)
     Serial.println(""); 
   }
 }
-
-/*
-#include <string>
-
-std::string openHtmlPage()
-{  
-  return "<!DOCTYPE HTML><html>\r\n";
-}
-
-std::string closeHtmlPage()
-{
-  return "</center></body></html>\n";   
-}
-
-std::string indexHtmlPage()
-{  
-  std::string htmlPage = 
-      openHtmlPage() +
-            "<body>" +
-            "<center>" + 
-            "<h1>Motor Controller</h1><br>" +
-            "Click to turn <a href=\"ledOn\">LED ON</a><br>" +
-            "Click to turn <a href=\"ledOff\">LED OFF</a><br>" +
-            "<hr>" +
-            "Click to <a href=\"forward\">Move Forward</a><br>" +
-            "Click to <a href=\"backward\">Move Backward</a><br>" +
-            "Click to <a href=\"stop\">Stop</a>" +
-            "<hr>";
-  return htmlPage;
-}
-
-void printStatus(const std::string msg) {
-  std::string s = indexHtmlPage() + msg + closeHtmlPage();
-  // server.send(200, "text/html", s);
-}
-*/
 
 #endif // _HTML_H_
