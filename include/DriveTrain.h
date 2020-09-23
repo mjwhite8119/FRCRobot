@@ -28,7 +28,7 @@ class DriveTrain
                         const float rightWheelSpeed) 
     {  
       leftWheel.motor.applyPower(sgn(leftWheelSpeed), leftWheelSpeed); 
-      rightWheel.motor.applyPower(rightWheelSpeed); 
+      rightWheel.motor.applyPower(sgn(leftWheelSpeed), rightWheelSpeed); 
     }
 
 };

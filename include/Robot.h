@@ -17,41 +17,49 @@ class Robot
 
     /**
      * Move robot forward
+     * 
+     * @param period - Period to run the motor in seconds
      */ 
     void forward(const int period) {
       driveTrain.setWheelSpeeds(180, 178);
-      digitalWrite(LED_BUILTIN, HIGH);
-      delay(period);
+      digitalWrite(LED_BUILTIN, HIGH); // Turn LED on to indicate message received
+      delay(period*1000); // delay is specified in micro seconds
       stop();
     }
 
     /**
      * Move robot backward
+     * 
+     * @param period - Period to run the motor in seconds
      */ 
     void backward(const int period) {
       driveTrain.setWheelSpeeds(180, 179);
       digitalWrite(LED_BUILTIN, HIGH);
-      delay(period);
+      delay(period*1000);
       stop();
     }
 
     /**
      * Spin the robot to the left
+     * 
+     * @param period - Period to run the motor in seconds
      */ 
     void left(const int period) {
       driveTrain.setWheelSpeeds(170, 170);
       digitalWrite(LED_BUILTIN, HIGH);
-      delay(period);
+      delay(period*1000);
       stop();
     }
 
     /**
      * Spin the robot to the right
+     * 
+     * @param period - Period to run the motor in seconds
      */ 
     void right(const int period) {
       driveTrain.setWheelSpeeds(170, 170);
       digitalWrite(LED_BUILTIN, HIGH);
-      delay(period);
+      delay(period*1000);
       stop();
     }
 

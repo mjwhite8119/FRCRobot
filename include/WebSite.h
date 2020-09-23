@@ -10,11 +10,11 @@ WiFiClient client;
 // Variable to store the HTTP request
 std::string header;
 
-// Auxiliar variables to store the current output state
-String forwardState = "stop";
-String backwardState = "stop";
-String leftState = "stop";
-String rightState = "stop";
+// // Auxiliar variables to store the current output state
+// String forwardState = "stop";
+// String backwardState = "stop";
+// String leftState = "stop";
+// String rightState = "stop";
 
 // Current time
 unsigned long currentTime = millis();
@@ -28,10 +28,10 @@ const long timeoutTime = 2000;
 // ----------------------------------------------------------
 void writeCSS() {
   client.println("<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}");
-  client.println(".button { background-color: #4CAF50; width: 50px; border: none; color: white; padding: 16px 40px 16px 50px;");
-  client.println("text-decoration: none; font-size: 30px; margin: 2px; text-align: center; cursor: pointer;}");
+  client.println(".button { background-color: #4CAF50; width: 50px; border: none; color: white; padding: 16px 10px 16px 10px;");
+  client.println("text-decoration: none; font-size: 30px; margin: 2px; text-align: left; cursor: pointer;}");
   client.println(".button2 {background-color: #555555;}");
-  client.println(".container { padding: 10px; position: relative; border: 1px; margin: 10px; }");
+  // client.println(".container { padding: 10px; position: relative; border: 1px; margin: 10px; }");
   client.println("</style></head>");
 }
 
@@ -50,37 +50,6 @@ void displayHeader() {
   
   // Web Page Heading
   client.println("<body><h1>ESP32 Robot</h1>");
-}
-
-void actionButtons() {
-
-  // If the forwardState is stop, it displays the START button       
-  if (forwardState=="stop") {
-    client.println("<p><a href=\"/forward/start\"><button class=\"button\">Forward&nbsp;</button></a></p>");
-  } else {
-    client.println("<p><a href=\"/forward/stop\"><button class=\"button button2\">Stop</button></a></p>");
-  } 
-  
-  // If the backwardState is stop, it displays the START button       
-  if (backwardState=="stop") {
-    client.println("<p><a href=\"/backward/start\"><button class=\"button\">Backward</button></a></p>");
-  } else {
-    client.println("<p><a href=\"/backward/stop\"><button class=\"button button2\">Stop</button></a></p>");
-  }
-
-  // If the forwardState is stop, it displays the START button       
-  if (leftState=="stop") {
-    client.println("<p><a href=\"/left/start\"><button class=\"button\">Left</button></a></p>");
-  } else {
-    client.println("<p><a href=\"/left/stop\"><button class=\"button button2\">Stop</button></a></p>");
-  } 
-  
-  // If the backwardState is stop, it displays the START button       
-  if (rightState=="stop") {
-    client.println("<p><a href=\"/right/start\"><button class=\"button\">Right</button></a></p>");
-  } else {
-    client.println("<p><a href=\"/right/stop\"><button class=\"button button2\">Stop</button></a></p>");
-  }
 }
 
 // ----------------------------------------------------------
@@ -120,14 +89,10 @@ void handleWebServer(Robot robot)
             client.println("Connection: close");
             client.println();
 
-            int pos = header.find("/", 5);
-            Serial.print("position = "); Serial.println(pos);
-            std::string x = header.substr(pos+1, 2);
-            Serial.println("=== header ====");
-            Serial.println(header.c_str());
-            Serial.print("X="); Serial.println(x.c_str());
+            int pos = header.find("/", 5);          
+            std::string x = header.substr(pos+1, 2);           
             int period = stoi(x);
-            Serial.print("D="); Serial.println(period);
+            Serial.print("period = "); Serial.println(period);
             
             // Control the robot action
             if (header.find("GET /forward") >= 0) {
@@ -145,6 +110,7 @@ void handleWebServer(Robot robot)
             
             String s;
             client.println("<div class=\"container\">");
+            client.println("Forward");
             printButton("1", "/forward/1");
             printButton("2", "/forward/2");
             printButton("3", "/forward/3");
