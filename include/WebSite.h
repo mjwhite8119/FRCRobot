@@ -28,10 +28,11 @@ const long timeoutTime = 2000;
 // ----------------------------------------------------------
 void writeCSS() {
   client.println("<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}");
-  client.println(".button { background-color: #4CAF50; width: 50px; border: none; color: white; padding: 16px 10px 16px 10px;");
-  client.println("text-decoration: none; font-size: 30px; margin: 2px; text-align: left; cursor: pointer;}");
+  client.println(".button { background-color: #4CAF50; width: 50px; border: none; color: white; padding: 10px;");
+  client.println("text-decoration: none; font-size: 30px; margin: auto; text-align: center; cursor: pointer;}");
   client.println(".button2 {background-color: #555555;}");
-  // client.println(".container { padding: 10px; position: relative; border: 1px; margin: 10px; }");
+  client.println(".label {display: inline-block; text-align: left; width: 100px;}");
+  client.println(".container { padding: 8px; position: relative; border: 1px; margin: 8px; }");
   client.println("</style></head>");
 }
 
@@ -55,9 +56,18 @@ void displayHeader() {
 // ----------------------------------------------------------
 // Display a button
 // ----------------------------------------------------------
-void printButton(String name, String url) {
+void printButton(const String name, const String url) {
   String s = "<span><a href=\"" + url + "\"><button class=\"button\">" + name + "</button></a></span>";
   client.println(s);
+}
+
+void printButtonGroup(const String name) {
+  client.println("<div class=\"container\">");
+  client.println("<span><h3 class=\"label\">" + name + "</h3></span>");
+  printButton("1", "/" + name + "/1");
+  printButton("2", "/" + name + "/2");
+  printButton("3", "/" + name + "/3");
+  client.println("</div>");
 }
 
 // ----------------------------------------------------------
@@ -89,37 +99,37 @@ void handleWebServer(Robot robot)
             client.println("Connection: close");
             client.println();
 
+            // Extract the value from the url
             int pos = header.find("/", 5);          
             std::string x = header.substr(pos+1, 2);           
-            int period = stoi(x);
-            Serial.print("period = "); Serial.println(period);
+            int period = stoi(x); // How long to run the motors
             
-            // Control the robot action
-            if (header.find("GET /forward") >= 0) {
-              robot.forward(period);         
-            } else if (header.find("GET /backward") >= 0) {
+            // Control the motors
+            if (header.find("GET /Forward") == 0) {
+              robot.forward(period);                     
+            } else if (header.find("GET /Backward") == 0) {
               robot.backward(period);
-            } else if (header.find("GET /left") >= 0) {
+            } else if (header.find("GET /Left") == 0) {
               robot.left(period);
-            } else if (header.find("GET /right") >= 0) {
+            } else if (header.find("GET /Right") == 0) {
               robot.right(period);  
             } 
             
             // Display the HTML page header and CSS
             displayHeader();
             
-            String s;
-            client.println("<div class=\"container\">");
-            client.println("Forward");
-            printButton("1", "/forward/1");
-            printButton("2", "/forward/2");
-            printButton("3", "/forward/3");
-            client.println("</div>");
+            // Display the buttons
+            printButtonGroup("Forward");
+            printButtonGroup("Backward");
+            printButtonGroup("Left");
+            printButtonGroup("Right");
 
+            // Close html
             client.println("</body></html>");
             
             // The HTTP response ends with another blank line
             client.println();
+            
             // Break out of the while loop
             break;
           } else { // if you got a newline, then clear currentLine
@@ -138,41 +148,5 @@ void handleWebServer(Robot robot)
     Serial.println(""); 
   }
 }
-
-/*
-#include <string>
-
-std::string openHtmlPage()
-{  
-  return "<!DOCTYPE HTML><html>\r\n";
-}
-
-std::string closeHtmlPage()
-{
-  return "</center></body></html>\n";   
-}
-
-std::string indexHtmlPage()
-{  
-  std::string htmlPage = 
-      openHtmlPage() +
-            "<body>" +
-            "<center>" + 
-            "<h1>Motor Controller</h1><br>" +
-            "Click to turn <a href=\"ledOn\">LED ON</a><br>" +
-            "Click to turn <a href=\"ledOff\">LED OFF</a><br>" +
-            "<hr>" +
-            "Click to <a href=\"forward\">Move Forward</a><br>" +
-            "Click to <a href=\"backward\">Move Backward</a><br>" +
-            "Click to <a href=\"stop\">Stop</a>" +
-            "<hr>";
-  return htmlPage;
-}
-
-void printStatus(const std::string msg) {
-  std::string s = indexHtmlPage() + msg + closeHtmlPage();
-  // server.send(200, "text/html", s);
-}
-*/
 
 #endif // _HTML_H_
