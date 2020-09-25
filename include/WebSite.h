@@ -37,7 +37,7 @@ void handleWebServer() {
   }
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/index.html", String(), false, processor);
+    request->send(SPIFFS, "/index2.html", String(), false, processor);
   });
   
   // Route to load style.css file
@@ -50,7 +50,7 @@ void handleWebServer() {
     String periodStr = request->arg("value");  
     direction = request->arg("direction");
     period = periodStr.toInt();
-    request->send(SPIFFS, "/index.html", String(), false, processor);
+    request->send(SPIFFS, "/index2.html", String(), false, processor);
   });
 
   // Send a GET request to <ESP_IP>/slider?value=<inputMessage>
