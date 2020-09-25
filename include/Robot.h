@@ -20,8 +20,8 @@ class Robot
      * 
      * @param period - Period to run the motor in seconds
      */ 
-    void forward(const int period, const int PWM) {
-      driveTrain.setWheelSpeeds(1, 1, PWM, PWM);
+    void forward(const int period) {
+      driveTrain.setWheelSpeeds(1, 1, 190, 190);
       digitalWrite(LED_BUILTIN, HIGH); // Turn LED on to indicate message received
       delay(period*1000); // delay is specified in micro seconds
       stop();
@@ -32,8 +32,8 @@ class Robot
      * 
      * @param period - Period to run the motor in seconds
      */ 
-    void backward(const int period, const int PWM) {
-      driveTrain.setWheelSpeeds(-1, -1, PWM, PWM);
+    void backward(const int period) {
+      driveTrain.setWheelSpeeds(-1, -1, 190, 190);
       digitalWrite(LED_BUILTIN, HIGH);
       delay(period*1000);
       stop();
@@ -44,8 +44,8 @@ class Robot
      * 
      * @param period - Period to run the motor in seconds
      */ 
-    void left(const int period, const int PWM) {
-      driveTrain.setWheelSpeeds(-1, 1, PWM, PWM);
+    void left(const int period) {
+      driveTrain.setWheelSpeeds(-1, 1, 190, 190);
       digitalWrite(LED_BUILTIN, HIGH);
       delay(period*1000);
       stop();
@@ -56,8 +56,8 @@ class Robot
      * 
      * @param period - Period to run the motor in seconds
      */ 
-    void right(const int period, const int PWM) {
-      driveTrain.setWheelSpeeds(1, -1, PWM, PWM);
+    void right(const int period) {
+      driveTrain.setWheelSpeeds(1, -1, 190, 190);
       digitalWrite(LED_BUILTIN, HIGH);
       delay(period*1000);
       stop();

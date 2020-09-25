@@ -30,20 +30,5 @@
     <a href="/move?value=2&direction=R"><button class="button">2</button></a>
     <a href="/move?value=3&direction=R"><button class="button">3</button></a>
   </div>
-  <span>Adjust PWM </span>
-  <span id="textSliderValue">%SLIDERVALUE%</span>
-  <div class="slidercontainer">  
-    <input type="range" onchange="updateSliderPWM(this)" id="pwmSlider" min="190" max="220" value="%SLIDERVALUE%" step="1" class="slider">
-  </div>
-<script>
-function updateSliderPWM(element) {
-  var sliderValue = document.getElementById("pwmSlider").value;
-  document.getElementById("textSliderValue").innerHTML = sliderValue;
-  console.log(sliderValue);
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", "/slider?value="+sliderValue, true);
-  xhr.send();
-}
-</script>
 </body>
 </html>
