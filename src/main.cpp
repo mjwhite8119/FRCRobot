@@ -2,38 +2,21 @@
 #include "config.h"
 #include "OLED.h"
 #include "connectWiFi.h"
-#include "WebSite1.h"
+#include "WebSite.h"
 #include "Robot.h"
 
 // Create robot object
 Robot robot;
-
-void testSPIFFS() {
- 
-  File file2 = SPIFFS.open("/index.html", "r");
- 
-  if (!file2) {
-    Serial.println("Failed to open file for reading");
-    return;
-  }
- 
-  Serial.println("File Content:");
- 
-  while (file2.available()) {
- 
-    Serial.write(file2.read());
-  }
- 
-  file2.close();
-}
 
 // ----------------------------------------------------------
 // Setup
 // ----------------------------------------------------------
 void setup() {
 
+  // Setup to write to the serial console for debugging
   Serial.begin(115200); while(!Serial && !Serial.available()){}
 
+  // This is the GPIO pin of the LED that is on the ESP32
   pinMode(LED_BUILTIN, OUTPUT);
 
   // Setup the OLED.
@@ -41,25 +24,14 @@ void setup() {
     setupOLED();
   #endif
 
-  // Start the SPIFFS filesystem to serve the HTML pages
-  if(!SPIFFS.begin(true)){
-    Serial.println("An Error has occurred while mounting SPIFFS");
-    return;
-  }
-
   // Connect to Wifi
   connectWiFi();
 
   // Setup for Over-the-Air updates
   setupOTA();
 
-  // Define the web pages and listen for incoming client requests
+  // Setup the web pages and listen for incoming web client requests
   handleWebServer();
-
-  // Begin the WebServer
-  server.begin();
-
-  // testSPIFFS();
 
 }
 
@@ -86,7 +58,7 @@ void loop() {
       Serial.println("Right");
       robot.right(period, PWM);
     }        
-    period = 0;
+    period = 0; // Reset period
   }
   
 
