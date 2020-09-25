@@ -2,15 +2,7 @@
 #define _CONFIG_H_
 
 // -------------- Hardware interfaces ----------------
-
 int LED_BUILTIN = 2;
-
-//----------------------------------
-// Include timer interrupt code
-//----------------------------------
-//  #include <esp_timer.h>
-// inline esp_timer_handle_t stateUpdateTimer;
-// inline esp_timer_handle_t motorTimer0, motorTimer1;
 
 //---------------------------------------
 // Define the GPIO pins for the motors
