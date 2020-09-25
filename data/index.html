@@ -1,0 +1,49 @@
+<!DOCTYPE HTML><html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <h2>Training Robot</h2>
+  <div class="container">
+    <h3 class="label">Forward</h3>
+    <a href="/move?value=1&direction=F"><button class="button">1</button></a>
+    <a href="/move?value=2&direction=F"><button class="button">2</button></a>
+    <a href="/move?value=3&direction=F"><button class="button">3</button></a>
+  </div>
+  <div class="container">
+    <h3 class="label">Backward</h3>
+    <a href="/move?value=1&direction=B"><button class="button">1</button></a>
+    <a href="/move?value=2&direction=B"><button class="button">2</button></a>
+    <a href="/move?value=3&direction=B"><button class="button">3</button></a>
+  </div>
+  <div class="container">
+    <h3 class="label">Left</h3>
+    <a href="/move?value=1&direction=L"><button class="button">1</button></a>
+    <a href="/move?value=2&direction=L"><button class="button">2</button></a>
+    <a href="/move?value=3&direction=L"><button class="button">3</button></a>
+  </div>
+  <div class="container">
+    <h3 class="label">Right</h3>
+    <a href="/move?value=1&direction=R"><button class="button">1</button></a>
+    <a href="/move?value=2&direction=R"><button class="button">2</button></a>
+    <a href="/move?value=3&direction=R"><button class="button">3</button></a>
+  </div>
+  <span>Adjust PWM </span>
+  <span id="textSliderValue">%SLIDERVALUE%</span>
+  <div class="slidercontainer">  
+    <input type="range" onchange="updateSliderPWM(this)" id="pwmSlider" min="180" max="220" value="%SLIDERVALUE%" step="1" class="slider">
+  </div>
+<script>
+function updateSliderPWM(element) {
+  var sliderValue = document.getElementById("pwmSlider").value;
+  document.getElementById("textSliderValue").innerHTML = sliderValue;
+  console.log(sliderValue);
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/slider?value="+sliderValue, true);
+  xhr.send();
+}
+</script>
+</body>
+</html>

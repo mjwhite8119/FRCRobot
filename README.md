@@ -20,6 +20,11 @@ Once you have the PlatformIO plugin installed the FRCRobot code can be cloned fr
 - You'll then be prompted to enter a directory location on your local machine in which to store the project.
 - Finally, open the project in VSCode.
 
+Open a terminal and type the command:
+
+ `platformio run -vv -e esp32dev -t uploadfs`
+ 
+This is required to load the HTML and CSS files into the ESP32 SPIFFS file system. 
 
 # <a name="code"></a>Code Description
 A diagram of the major code components for FRCRobot1 is shown below. The main program unit calls utility functions to connect to WiFi and bring up a Web Server on it's IP address.  The IP address and WiFi connection status is shown on an OLED display.  The Web Server is used to interact with the robot.
