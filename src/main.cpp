@@ -46,18 +46,14 @@ void loop() {
   // Handle requests from the website
   if (period > 0) {
     if (direction.compareTo("F") == 0) {
-      Serial.println("Forward");
-      robot.forward(period, PWM);
+      Serial.print("Forward ");
+      Serial.print(leftPWM);Serial.print(" ");Serial.println(rightPWM);
+      robot.forward(period, leftPWM, rightPWM);
     } else if (direction.compareTo("B") == 0) {
-      Serial.println("Backward");
-      robot.backward(period, PWM);
-    } else if (direction.compareTo("L") == 0) {
-      Serial.println("Left");
-      robot.left(period, PWM);
-    } else if (direction.compareTo("R") == 0) {
-      Serial.println("Right");
-      robot.right(period, PWM);
-    }        
+      Serial.println("Backward ");
+      Serial.print(leftPWM);Serial.print(" ");Serial.println(rightPWM);
+      robot.backward(period, leftPWM, rightPWM);
+    } 
     period = 0; // Reset period
   }
   

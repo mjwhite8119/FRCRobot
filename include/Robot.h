@@ -19,9 +19,11 @@ class Robot
      * Move robot forward
      * 
      * @param period - Period to run the motor in seconds
+     * @param leftPWM - Left PWM signal
+     * @param rightPWM - Right PWM signal
      */ 
-    void forward(const int period, const int PWM) {
-      driveTrain.setWheelSpeeds(1, 1, PWM, PWM);
+    void forward(const int period, const int leftPWM, const int rightPWM) {
+      driveTrain.setWheelSpeeds(1, 1, leftPWM, rightPWM);
       digitalWrite(LED_BUILTIN, HIGH); // Turn LED on to indicate message received
       delay(period*1000); // delay is specified in micro seconds
       stop();
@@ -31,9 +33,11 @@ class Robot
      * Move robot backward
      * 
      * @param period - Period to run the motor in seconds
+     * @param leftPWM - Left PWM signal
+     * @param rightPWM - Right PWM signal
      */ 
-    void backward(const int period, const int PWM) {
-      driveTrain.setWheelSpeeds(-1, -1, PWM, PWM);
+    void backward(const int period, const int leftPWM, const int rightPWM) {
+      driveTrain.setWheelSpeeds(-1, -1, leftPWM, rightPWM);
       digitalWrite(LED_BUILTIN, HIGH);
       delay(period*1000);
       stop();
@@ -44,24 +48,24 @@ class Robot
      * 
      * @param period - Period to run the motor in seconds
      */ 
-    void left(const int period, const int PWM) {
-      driveTrain.setWheelSpeeds(-1, 1, PWM, PWM);
-      digitalWrite(LED_BUILTIN, HIGH);
-      delay(period*1000);
-      stop();
-    }
+    // void left(const int period, const int PWM) {
+    //   driveTrain.setWheelSpeeds(-1, 1, PWM, PWM);
+    //   digitalWrite(LED_BUILTIN, HIGH);
+    //   delay(period*1000);
+    //   stop();
+    // }
 
     /**
      * Spin the robot to the right
      * 
      * @param period - Period to run the motor in seconds
      */ 
-    void right(const int period, const int PWM) {
-      driveTrain.setWheelSpeeds(1, -1, PWM, PWM);
-      digitalWrite(LED_BUILTIN, HIGH);
-      delay(period*1000);
-      stop();
-    }
+    // void right(const int period, const int PWM) {
+    //   driveTrain.setWheelSpeeds(1, -1, PWM, PWM);
+    //   digitalWrite(LED_BUILTIN, HIGH);
+    //   delay(period*1000);
+    //   stop();
+    // }
 
     /**
      * Stop the robot
