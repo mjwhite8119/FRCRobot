@@ -47,16 +47,16 @@ void loop() {
   if (period > 0) {
     if (direction.compareTo("F") == 0) {
       Serial.println("Forward");
-      robot.forward(period, PWM);
+      robot.forward(period, speed);
     } else if (direction.compareTo("B") == 0) {
       Serial.println("Backward");
-      robot.backward(period, PWM);
+      robot.backward(period, speed);
     } else if (direction.compareTo("L") == 0) {
       Serial.println("Left");
-      robot.left(period, PWM);
+      robot.left(period, speed);
     } else if (direction.compareTo("R") == 0) {
       Serial.println("Right");
-      robot.right(period, PWM);
+      robot.right(period, speed);
     }        
     period = 0; // Reset period
   }

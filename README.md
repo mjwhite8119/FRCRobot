@@ -5,9 +5,6 @@ The code is installed on a small Arduino based training robot.  The Bill-of-Mate
 
 - [Development Environment Setup](#ide)
 - [Code Description](#code)
-- [Hardware Bill-of-Materials](#bom)
-- [Robot Construction](#build)
-- [Wiring Diagram](#wiring)
 
 
 # <a name="ide"></a>Development Environment Setup
@@ -27,29 +24,18 @@ Open a terminal and type the command:
 This is required to load the HTML and CSS files into the ESP32 SPIFFS file system. 
 
 # <a name="code"></a>Code Description
-A diagram of the major code components for FRCRobot1 is shown below. The main program unit calls utility functions to connect to WiFi and bring up a Web Server on it's IP address.  The IP address and WiFi connection status is shown on an OLED display.  The Web Server is used to interact with the robot.
+A diagram of the major code components for <i>FRCRobot-level3</i> is shown below. The main program unit calls utility functions to connect to WiFi and bring up a Web Server on it's IP address.  The IP address and WiFi connection status is shown on an OLED display.  The Web Server is used to interact with the robot.
 
 The main program creates a <i>Robot</i> class that is composed of a <i>DriveTrain</i> with a left and right <i>Wheel</i>.  Each wheel has it's own <i>DCMotor</i>.  This sets up a differential drive configuration for the robot.
 
-![Robot Model](images/FRCRobot/FRCRobot.001.jpeg)
+![Robot Model](images/FRCRobot/FRCRobot.003.jpeg)
 
-This first program implements some very basic functionality.  You can move the robot forward and backward, and have it turn left or right. Because two motors are never the same the robot will most likely not move in a straight line.  This can only be solved by using wheel encoders and a PID loop. This will be implemented in the next code levels.
+This level has two major changes. 
+- We add code for the encoders so as we can track how fast the wheels are turning.
+- Instead of passing in the speed as a PWM value we now pass it in as a value between 1 and -1.
 
-# <a name="bom"></a>Hardware Bill-of-Materials
-The links in this BOM will show multiple pieces for most products.  It's assumed that teams will want to build more than one robot and this will reduce the cost per unit. Single pieces are available but at a higher cost per item.  Most items come with the screws and wires. Some additional hardware items maybe required.
-- [ESP32 ESP-32S WiFi Development Board NodeMCU-32S](https://www.amazon.com/dp/B086MGH7JV/?coliid=I25TTO5GWWP44Q&colid=18A3P3KX2X6RJ&psc=1&ref_=lv_ov_lig_dp_it)
-- [L298N Motor Drive Controller Board](https://www.amazon.com/gp/product/B07PDDZM9L/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&psc=1)
-- [DC Motor Wheel Kit](https://www.amazon.com/dp/B081W176PL/?coliid=I2H12T7AI2ENJS&colid=18A3P3KX2X6RJ&psc=1&ref_=lv_ov_lig_dp_it)
-- [Optical Encoder Sensor for Motor Speed Detection](https://www.amazon.com/dp/B081W4KMHC/?coliid=I1OIKZCDSA96CD&colid=18A3P3KX2X6RJ&psc=1&ref_=lv_ov_lig_dp_it)
-- [6DOF MPU6050 Module 3 Axis Gyroscope + Accelerometer Module](https://www.amazon.com/dp/B06XW9ZSC8/?coliid=I33S53IKDA4YTC&colid=18A3P3KX2X6RJ&psc=1&ref_=lv_ov_lig_dp_it)
-- [I2C Display Module 0.91 Inch](https://www.amazon.com/dp/B08CDN5PSJ/?coliid=IPPZF5KYF3ZDQ&colid=18A3P3KX2X6RJ&psc=1&ref_=lv_ov_lig_dp_it)
-- [18650 Battery Holder with ON/Off Switch](https://www.amazon.com/gp/product/B071DF4ZFG/ref=ppx_yo_dt_b_asin_title_o04_s00?ie=UTF8&psc=1)
-- [Samsung 25R 18650 2500mAh 20A Battery](https://www.18650batterystore.com/18650-p/samsung-25r-18650.htm?gclid=CjwKCAjwkoz7BRBPEiwAeKw3q0UdWyndKWW0d0Z4SdPLWF9pgRI892BRPVXSbqOe6H6sriTIbdVDzhoC-gMQAvD_BwE)
-- [1" Caster Wheels Single Wheel Swivel Casters](https://www.amazon.com/gp/product/B07TXP54KG/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&psc=1)
-# <a name="build"></a>Robot Construction
-Well, here's what I have so far... Probably not the final build but it shows all of the hardward components that will be on the robot.
+![Encoder Model](images/FRCRobot/FRCRobot.005.jpeg)
 
-![Robot photo](images/FRCRobot/FRCRobot.002.jpeg)
+Input is a speed ratio between -1.0 (backwards) and 1.0 (forward). It takes the requested wheel speed and calculates the number of pulses per second required to achieve that speed.  
 
-# <a name="wiring"></a>Wiring Diagram
-Yep! as soon as I have a final build.
+![DCMotor Model](images/FRCRobot/FRCRobot.004.jpeg)

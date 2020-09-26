@@ -17,20 +17,18 @@ class DriveTrain
     Wheel rightWheel = Wheel(rightWheelPinGroup); // Attach the right wheel
 
     /**
-     * Sets the direction and wheel speed for the motors.
+     * Sets the wheel speed for the motors.  The wheel speed 
+     * between 1 and -1, where 1 is full speed forward and -1
+     * is full speed backwards.
      *
-     * @param leftDir  Direction for left motor.
-     * @param rightDir Direction for right motor.
-     * @param leftWheelSpeed The PWM value to send to the left motor.
-     * @param rightWheelSpeed The PWM value to send to the right motor.
+     * @param leftWheelSpeed - A wheel speed between 1 and -1
+     * @param rightWheelSpeed - A wheel speed between 1 and -1
      */
-    void setWheelSpeeds(const int leftDir,
-                        const int rightDir,
-                        const float leftWheelSpeed, 
+    void setWheelSpeeds(const float leftWheelSpeed, 
                         const float rightWheelSpeed) 
     {  
-      leftWheel.motor.applyPower(leftDir, leftWheelSpeed); 
-      rightWheel.motor.applyPower(rightDir, rightWheelSpeed); 
+      leftWheel.motor.setSpeed(leftWheelSpeed); 
+      rightWheel.motor.setSpeed(rightWheelSpeed); 
     }
 
 };

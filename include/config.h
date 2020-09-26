@@ -2,7 +2,7 @@
 #define _CONFIG_H_
 
 // -------------- Hardware interfaces ----------------
-int LED_BUILTIN = 2;
+const int LED_BUILTIN = 2;
 
 //---------------------------------------
 // Define the GPIO pins for the motors
@@ -11,8 +11,9 @@ static struct MotorPins {
   const byte motorDir1; // motor direction pin1
   const byte motorDir2; // motor direction pin2
   const byte enable; // Enable PMW 
-} motorPinGroup[2] = {27, 26, 25, 
-                      12, 14, 13};
+  const byte encoder; // Wheel encoder
+} motorPinGroup[2] = {27, 26, 25, 34,
+                      12, 14, 13, 35};
 
 // PMW for motors
 const int freq = 30000;

@@ -3,10 +3,10 @@
 #include <ESPAsyncWebServer.h>
 #include <SPIFFS.h>
 
-String sliderValue = "190";
+String sliderValue = "0.0";
 String direction = "";
 int period = 0;
-int PWM = 190;
+int speed = 0;
 
 const char* PARAM_INPUT = "value";
 
@@ -37,7 +37,7 @@ void handleWebServer() {
   }
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/index2.html", String(), false, processor);
+    request->send(SPIFFS, "/index3.html", String(), false, processor);
   });
   
   // Route to load style.css file
@@ -50,7 +50,7 @@ void handleWebServer() {
     String periodStr = request->arg("value");  
     direction = request->arg("direction");
     period = periodStr.toInt();
-    request->send(SPIFFS, "/index2.html", String(), false, processor);
+    request->send(SPIFFS, "/index3.html", String(), false, processor);
   });
 
   // Send a GET request to <ESP_IP>/slider?value=<inputMessage>
@@ -60,7 +60,7 @@ void handleWebServer() {
     if (request->hasParam(PARAM_INPUT)) {
       inputMessage = request->getParam(PARAM_INPUT)->value();
       sliderValue = inputMessage;
-      PWM = sliderValue.toInt();
+      speed = sliderValue.toInt();
     }
     else {
       inputMessage = "No message sent";
