@@ -3,10 +3,12 @@
 #include <ESPAsyncWebServer.h>
 #include <SPIFFS.h>
 
-String sliderValue = "0.0";
+String sliderValueLeft = "0";
+String sliderValueRight = "0";
 String direction = "";
 int period = 0;
-int speed = 0;
+int leftPWM = 0;
+int rightPWM = 0;
 
 const char* PARAM_INPUT = "value";
 
@@ -19,9 +21,11 @@ AsyncWebServer server(80);
  * @param var - Requested string value from web page
  */ 
 String processor(const String& var){
-  if (var == "SLIDERVALUE"){
-    return sliderValue;
-  }
+  if (var == "SLIDERVALUE1"){
+    return sliderValueLeft;
+  } else if (var == "SLIDERVALUE2"){
+    return sliderValueRight;
+  } 
   return String();
 }
 
@@ -50,17 +54,34 @@ void handleWebServer() {
     String periodStr = request->arg("value");  
     direction = request->arg("direction");
     period = periodStr.toInt();
+    commandScheduled = true;
     request->send(SPIFFS, "/index3.html", String(), false, processor);
   });
 
   // Send a GET request to <ESP_IP>/slider?value=<inputMessage>
-  server.on("/slider", HTTP_GET, [] (AsyncWebServerRequest *request) {
+  server.on("/slider1", HTTP_GET, [] (AsyncWebServerRequest *request) {
     String inputMessage;
     // GET input1 value on <ESP_IP>/slider?value=<inputMessage>
     if (request->hasParam(PARAM_INPUT)) {
       inputMessage = request->getParam(PARAM_INPUT)->value();
-      sliderValue = inputMessage;
-      speed = sliderValue.toInt();
+      sliderValueLeft = inputMessage;
+      leftPWM = sliderValueLeft.toInt();
+    }
+    else {
+      inputMessage = "No message sent";
+    }
+    Serial.println(inputMessage);
+    request->send(200, "text/plain", "OK");
+  });
+
+  // Send a GET request to <ESP_IP>/slider?value=<inputMessage>
+  server.on("/slider2", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    String inputMessage;
+    // GET input1 value on <ESP_IP>/slider?value=<inputMessage>
+    if (request->hasParam(PARAM_INPUT)) {
+      inputMessage = request->getParam(PARAM_INPUT)->value();
+      sliderValueRight = inputMessage;
+      rightPWM = sliderValueRight.toInt();
     }
     else {
       inputMessage = "No message sent";

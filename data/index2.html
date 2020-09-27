@@ -17,31 +17,32 @@
     <a href="/move?value=1&direction=B"><button class="button">1</button></a>
     <a href="/move?value=2&direction=B"><button class="button">2</button></a>
     <a href="/move?value=3&direction=B"><button class="button">3</button></a>
-  </div>
-  <div class="container">
-    <h3 class="label">Left</h3>
-    <a href="/move?value=1&direction=L"><button class="button">1</button></a>
-    <a href="/move?value=2&direction=L"><button class="button">2</button></a>
-    <a href="/move?value=3&direction=L"><button class="button">3</button></a>
-  </div>
-  <div class="container">
-    <h3 class="label">Right</h3>
-    <a href="/move?value=1&direction=R"><button class="button">1</button></a>
-    <a href="/move?value=2&direction=R"><button class="button">2</button></a>
-    <a href="/move?value=3&direction=R"><button class="button">3</button></a>
-  </div>
-  <span>Adjust PWM </span>
-  <span id="textSliderValue">%SLIDERVALUE%</span>
+  </div> 
+  <span>Adjust left PWM </span>
+  <span id="textSliderValueLeft">%SLIDERVALUE1%</span>
   <div class="slidercontainer">  
-    <input type="range" onchange="updateSliderPWM(this)" id="pwmSlider" min="190" max="220" value="%SLIDERVALUE%" step="1" class="slider">
+    <input type="range" onchange="updateSliderLeft(this)" id="pwmSliderLeft" min="0" max="255" value="%SLIDERVALUE1%" step="1" class="slider">
+  </div>
+  <span>Adjust right PWM </span>
+  <span id="textSliderValueRight">%SLIDERVALUE2%</span>
+  <div class="slidercontainer">  
+    <input type="range" onchange="updateSliderRight(this)" id="pwmSliderRight" min="0" max="255" value="%SLIDERVALUE2%" step="1" class="slider">
   </div>
 <script>
-function updateSliderPWM(element) {
-  var sliderValue = document.getElementById("pwmSlider").value;
-  document.getElementById("textSliderValue").innerHTML = sliderValue;
-  console.log(sliderValue);
+function updateSliderLeft(element) {
+  var sliderValueLeft = document.getElementById("pwmSliderLeft").value;
+  document.getElementById("textSliderValueLeft").innerHTML = sliderValueLeft;
+  console.log(sliderValueLeft);
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", "/slider?value="+sliderValue, true);
+  xhr.open("GET", "/slider1?value="+sliderValueLeft, true);
+  xhr.send();
+}
+function updateSliderRight(element) {
+  var sliderValueRight = document.getElementById("pwmSliderRight").value;
+  document.getElementById("textSliderValueRight").innerHTML = sliderValueRight;
+  console.log(sliderValueRight);
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/slider2?value="+sliderValueRight, true);
   xhr.send();
 }
 </script>

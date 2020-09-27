@@ -12,8 +12,8 @@ static struct MotorPins {
   const byte motorDir2; // motor direction pin2
   const byte enable; // Enable PMW 
   const byte encoder; // Wheel encoder
-} motorPinGroup[2] = {27, 26, 25, 34,
-                      12, 14, 13, 35};
+} motorPinGroup[2] = {12, 14, 13, 34,
+                      27, 26, 25, 35};
 
 // PMW for motors
 const int freq = 30000;

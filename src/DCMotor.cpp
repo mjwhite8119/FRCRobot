@@ -24,27 +24,27 @@ DCMotor::DCMotor(const uint8_t pinGroup)
   ledcAttachPin(motorPinGroup[pinGroup_].enable, pinGroup_); // attach channel to pin
 
   // Start motor power timers 
-  // switch (pinGroup)
-  // {
-  // case 0: 
-  //   {
-  //     const esp_timer_create_args_t periodic_timer_args = {.callback = &motorISR0};
-  //     esp_timer_create(&periodic_timer_args, &motorTimer0);
-  //     esp_timer_start_periodic(motorTimer0, speedCtrlPeriodMicros); // Time in milliseconds (50)
-  //     instances [0] = this; 
-  //   }
-  //   break;
+  switch (pinGroup)
+  {
+  case 0: 
+    {
+      const esp_timer_create_args_t periodic_timer_args = {.callback = &motorISR0};
+      esp_timer_create(&periodic_timer_args, &motorTimer0);
+      esp_timer_start_periodic(motorTimer0, speedCtrlPeriodMicros); // Time in milliseconds (50)
+      instances [0] = this; 
+    }
+    break;
     
-  // case 1: 
-  //   {
-  //     const esp_timer_create_args_t periodic_timer_args = {.callback = &motorISR1};
-  //     esp_timer_create(&periodic_timer_args, &motorTimer1);
-  //     esp_timer_start_periodic(motorTimer1, speedCtrlPeriodMicros); // Time in milliseconds (50)
-  //     instances [1] = this;
-  //   }
-  //   break;
+  case 1: 
+    {
+      const esp_timer_create_args_t periodic_timer_args = {.callback = &motorISR1};
+      esp_timer_create(&periodic_timer_args, &motorTimer1);
+      esp_timer_start_periodic(motorTimer1, speedCtrlPeriodMicros); // Time in milliseconds (50)
+      instances [1] = this;
+    }
+    break;
     
-  // } // end of switch
+  } // end of switch
 
 }
 
@@ -53,81 +53,48 @@ DCMotor::DCMotor(const uint8_t pinGroup)
 // -------------------------------------------------------- 
 // Set the wheel speeds 
 // --------------------------------------------------------
-void DCMotor::setSpeed(const float wheelSpeed) {
+void DCMotor::setSpeed(const int dir, 
+                       const int PWM, 
+                       const int timeOut) {
 
-  // Compute the PWM.  Minimum value is feedForward (180 PWM)
-  PWM_ = feedForward + (wheelSpeed * 7.5);
-  int direction = sgn(wheelSpeed);
-  applyPower_(direction, PWM_);
+  // Save the last pulses value                      
+  pulsesLast_ = encoder.pulses; 
+
+  // Set the PWM and direction for this wheel
+  PWM_ = PWM;
+  direction_ = dir;
+
+  // Let the encoder know which direction it's spinning
+  encoder.setWheelDirection(direction_);
+
+  // Set the timeout to stop the motor
+  timeOut_ = timeOut;
+  startTime_ = millis();
+  running = true;
 }
-
-// -------------------------------------------------------- 
-// Set the wheel speeds 
-// --------------------------------------------------------
-// void DCMotor::setSpeed(const float wheelSpeed) {
-
-//   // Log the wheel speed proportion to calculate feedforward
-//   wheelSpeedProportion_ = wheelSpeed;
-
-//   // Translate the speed ratio into pulses per/sec.
-//   // Where speed ratio of 1.0 equals 700 pulses per/sec
-//   pulseSetpoint_ = int(maxPulsesPerSecond * wheelSpeed);
-
-//   // Don't go over max pulses/sec
-//   if (abs(pulseSetpoint_) > maxPulsesPerSecond) {
-//     pulseSetpoint_ = maxPulsesPerSecond;
-//   }
-
-//   encoder.wheelDirection = sgn(pulseSetpoint_);
-
-//   // Log the time that the last setpoint request was received
-//   lastMessageTime_ = millis();
-// }  
 
 // ----------------------------------------------------------------
 // Set motor power using a PID loop
 // ---------------------------------------------------------------- 
-// void IRAM_ATTR DCMotor::setPower_() {
+void IRAM_ATTR DCMotor::setPower_() {
 
-//   portENTER_CRITICAL_ISR(&timerMux);
+  portENTER_CRITICAL_ISR(&timerMux);
 
-//   // Stop the motor if you don't receive a message within 100 milliseconds
-//   if ( (millis() - lastMessageTime_) > timeOut_ ) {
-//     PWM_ = 0;
-//   }  
-//   else 
-//   {   
-//     // Get the number of pulses since the last period
-//     const int32_t pulses = encoder.pulses;  
-//     const int32_t pulsesThisPeriod = abs(pulses - pulsesLast_);
-       
-//     // Save the last pulses
-//     pulsesLast_ = pulses;
-  
-//     // Compute the error between requested pulseSetpoint and actual pulses/sec
-//     pulsesPerSec_ = pulsesThisPeriod * periodsPerSec;
-//     error_ = abs(pulseSetpoint_) - pulsesPerSec_; 
-    
-//     // PI control
-//     pPart_ = Kp * error_; // Proportional
+  // Stop the motor after the timeout period
+  if ( (millis() - startTime_) > timeOut_ ) {
+    PWM_ = 0;
 
-//     // Compute feed forward
-//     const float feedforward = (int)(kS + (kV * wheelSpeedProportion_));
+    // Compute pulses per second for this last motion request
+    const int32_t pulsesThisPeriod = abs(encoder.pulses - pulsesLast_);
+    pulsesPerSec_ = pulsesThisPeriod / (timeOut_ / 1000); // timeOut is in milliseconds
+    running = false;
+  }  
+
+  // Apply the power with the direction and PWM signal
+  applyPower_(direction_, PWM_);
   
-//     // Compute the PWM
-//     PWM_ = int(pPart_ + feedforward);
-  
-//     // Motors are shutting down
-//     if (pulseSetpoint_ == 0) { PWM_ = 0;} 
-    
-//   } // End else
- 
-//   // Apply the power with the direction and PWM signal
-//   applyPower_(sgn(pulseSetpoint_), PWM_);
-  
-//   portEXIT_CRITICAL_ISR(&timerMux);
- 
-// }
+  portEXIT_CRITICAL_ISR(&timerMux);
+}
 
 // ------------------------------------------------
 // Apply power to motor 
