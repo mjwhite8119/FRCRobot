@@ -49,9 +49,8 @@ inline void connectWiFi(uint8_t wifi_mode=0)
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
     
-    clearDisplayBelowHeader();
-    drawText(1, 0, "IP");
-    drawIPAddress(1, 20, WiFi.localIP());
+    clearDisplayBelowHeader();   
+    drawIPAddress(0, 35, WiFi.localIP());
 
     // Add the WiFi icon
     drawWiFi();

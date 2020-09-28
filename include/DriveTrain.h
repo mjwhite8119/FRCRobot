@@ -36,7 +36,9 @@ class DriveTrain
     }
 
     /**
-     * Returns whether the motors are running
+     * Returns true if the motors are running
+     * 
+     * @return true/false - Depending on the state of the motors
      */
     bool active() {
       if (leftWheel.motor.running || rightWheel.motor.running) {
@@ -46,6 +48,11 @@ class DriveTrain
       }      
     }
 
+    /**
+     * Returns true if the motors have stopped
+     * 
+     * @return true/false - Depending on the state of the motors
+     */
     bool inActive() { return !active(); }
 
 };

@@ -64,9 +64,10 @@ class DCMotor
     int PWM_ = 0; // Current PWM
     int direction_ = 0; // Direction of the motor
     int timeOut_ = 0; // Length of time motor runs
-    double startTime_ = millis(); // Start time for this request
+    unsigned long currentStartTime_ = 0; // Start time for this request
     int32_t pulsesLast_ = 0; 
     int32_t pulsesPerSec_ = 0;
+    unsigned long checkMillis = 0;
     
     /**
      * Set motor power. This function is run every 25ms from the timer interrupt

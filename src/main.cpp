@@ -2,16 +2,17 @@
 #include "config.h"
 #include "OLED.h"
 #include "connectWiFi.h"
-
-// Command flags. Must be placed before including WebSite
-bool commandRunning = false;
-bool commandScheduled = false;
-
-#include "WebSite.h"
+#include "Command.h"
 #include "Robot.h"
 
 // Create robot object
 Robot robot;
+
+// Create the command object
+Command command(robot);
+
+// WebSite must be included after command is created
+#include "WebSite.h"
 
 // ----------------------------------------------------------
 // Setup
@@ -48,26 +49,19 @@ void loop() {
   // Must include to handle OTA updates
   ArduinoOTA.handle();
 
-  // Handle commands from the controller
-  if (commandScheduled) {
-    if (direction.compareTo("F") == 0) {
-      Serial.print("Forward ");
-      robot.forward(period, leftPWM, rightPWM);
-    } else if (direction.compareTo("B") == 0) {
-      Serial.println("Backward ");
-      robot.backward(period, leftPWM, rightPWM);
-    } 
-    // The command is now running
-    commandRunning = true;
-
-    // Reset to false so as this code section only runs once
-    commandScheduled = false; 
-  }
+  // Initialize commands received from the website
+  if (command.isScheduled()) {
+    command.initialize();
+  }  
 
   // Handle the running command
-  robot.handleRunningCommand();
+  if (command.isRunning()) {
+    command.execute();
+  }
 
   // Run tasks after command is finished
-  robot.handleEndCommand();
+  if (command.isFinished()) {
+    command.end();
+  } 
   
 }

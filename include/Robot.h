@@ -10,44 +10,75 @@ class Robot
     // --- Constructor ---
     Robot() {}
     
+    // // --- Member variables ---
+    // bool commandRunning = false;
+    // bool commandScheduled = false;
+    // bool commandFinished = true;
+
     // --- Member classes (Robot configuration) ---
 
     // Drive train of robot
     DriveTrain driveTrain;
 
-    /**
-     * Handles tasks to be performed while the command is running.
-     * This is called from the main loop.
-     */ 
-    void handleRunningCommand() {
-      // If the driveTrain is inactive then the command is finished
-      if (driveTrain.inActive()) {
-        commandRunning = false;
-      }
-    }
+    // /**
+    //  * Handles tasks to be performed when a command is scheduled.
+    //  * The command gets scheduled from the WebSite.
+    //  * This is called from the main loop.
+    //  */ 
+    // void initializeCommand() {
+
+    //   if (direction.compareTo("F") == 0) {
+    //     Serial.print("Forward ");
+    //     forward(period, leftPWM, rightPWM);
+    //   } else if (direction.compareTo("B") == 0) {
+    //     Serial.println("Backward ");
+    //     backward(period, leftPWM, rightPWM);
+    //   } 
+    //   // The command is now running and not finished
+    //   commandRunning = true;
+    //   commandFinished = false;
+
+    //   // Command is now running so no longer scheduled
+    //   commandScheduled = false; 
+    // }
+
+    // /**
+    //  * Handles tasks to be performed while the command is running.
+    //  * This is called from the main loop.
+    //  */ 
+    // void executeCommand() {
+    //   // If the driveTrain is inactive then the command is finished
+    //   if (driveTrain.inActive()) {
+    //     commandFinished = true;
+    //   }
+    // }
 
     /**
      * Handles tasks to be performed after a command has completed.
      * This is called from the main loop.
      */ 
-    void handleEndCommand() {
+    // void endCommand() {
 
-      // Do nothing if the command is running
-      if (commandRunning) { return; }
+    //   // Execute these tasks if the command is running
+    //   if (commandRunning) { 
 
-       // Turn off the LED
-      digitalWrite(LED_BUILTIN, LOW);
+    //     // Turn off the LED
+    //     digitalWrite(LED_BUILTIN, LOW);
 
-      // Get the number of pulses from each encoder
-      int leftMotorPulses = robot.driveTrain.leftWheel.motor.getPulsesPerSecond();
-      int rightMotorPulses = robot.driveTrain.rightWheel.motor.getPulsesPerSecond();
-      
-      // Display pulses per second for this command to the OLED
-      drawText(2, 0, "L");
-      drawText(2, 10, String(leftMotorPulses));
-      drawText(2, 50, "R");
-      drawText(2, 60, String(rightMotorPulses));
-    }
+    //     // Get the number of pulses from each encoder
+    //     int leftMotorPulses = robot.driveTrain.leftWheel.motor.getPulsesPerSecond();
+    //     int rightMotorPulses = robot.driveTrain.rightWheel.motor.getPulsesPerSecond();
+        
+    //     // Display pulses per second for this command to the OLED
+    //     drawText(2, 0, "L");
+    //     drawText(2, 10, String(leftMotorPulses));
+    //     drawText(2, 50, "R");
+    //     drawText(2, 60, String(rightMotorPulses));
+
+    //     // Now we're completely done and the command no longer running
+    //     commandRunning = false;
+    //   }
+    // }
 
     /**
      * Move robot forward
@@ -112,4 +143,4 @@ class Robot
     // }
 };
 
-#endif _ROBOT_H_
+#endif // _ROBOT_H_
