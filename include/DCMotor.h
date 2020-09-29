@@ -27,8 +27,6 @@ class DCMotor
 
     // const int maxPulsesPerSecond = 700; 
 
-    bool running = false;
-
     // Mutex for protecting critical code in interrupts
     portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
      
@@ -42,6 +40,13 @@ class DCMotor
     void setSpeed(const int dir, 
                   const int wheelSpeed, 
                   const int timeOut);
+
+    /**
+     * Is the motor currently running
+     * 
+     * @return true/false - The running status of the motor
+     */
+    bool isRunning() { return running_; }
 
     /**
      * Returns the current PWM value for this motor.
@@ -67,7 +72,7 @@ class DCMotor
     unsigned long currentStartTime_ = 0; // Start time for this request
     int32_t pulsesLast_ = 0; 
     int32_t pulsesPerSec_ = 0;
-    unsigned long checkMillis = 0;
+    bool running_ = false; // Current running status of the motor
     
     /**
      * Set motor power. This function is run every 25ms from the timer interrupt

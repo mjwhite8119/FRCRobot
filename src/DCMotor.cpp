@@ -70,7 +70,6 @@ void DCMotor::setSpeed(const int dir,
   // Set the timeout to stop the motor
   timeOut_ = timeOut;
   currentStartTime_ = millis();
-  running = true;
 }
 
 // ----------------------------------------------------------------
@@ -84,7 +83,6 @@ void IRAM_ATTR DCMotor::setPower_() {
   if ( (millis() - currentStartTime_) > timeOut_ ) 
   {
     PWM_ = 0;
-    running = false;
 
     // Compute pulses per second for this last motion request
     if (timeOut_ > 0) {
@@ -119,4 +117,10 @@ void IRAM_ATTR DCMotor::applyPower_(const int dir, const int PWM) {
   // Send the PWM signal to the motor. See pinGroup in Config.h
   ledcWrite(pinGroup_, abs(PWM));
 
+  // Set the running status of the motor
+  if (PWM > 0) {
+    running_ = true;
+  } else {
+    running_ = false;
+  }
 }

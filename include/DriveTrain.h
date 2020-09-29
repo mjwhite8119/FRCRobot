@@ -41,7 +41,7 @@ class DriveTrain
      * @return true/false - Depending on the state of the motors
      */
     bool active() {
-      if (leftWheel.motor.running || rightWheel.motor.running) {
+      if (leftWheel.motor.isRunning() || rightWheel.motor.isRunning()) {
         return true;
       } else {
         return false;
