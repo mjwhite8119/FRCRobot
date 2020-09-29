@@ -54,13 +54,6 @@ void loop() {
     command.initialize();
   }  
 
-  // if (command.isScheduled()) {
-  //   robot.forward(3, 190, 190);
-  //   command.unSchedule();
-  // }
-    
-  
-
   // Handle the running command
   if (command.isRunning()) {
     command.execute();

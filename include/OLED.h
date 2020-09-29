@@ -11,7 +11,7 @@
   #define OLED_SCL   22
 
   // NodeMCU-32S: SCL 21, SDA 22, No reset
-  U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0, OLED_SCL, OLED_SDA, U8X8_PIN_NONE);
+  inline U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0, OLED_SCL, OLED_SDA, U8X8_PIN_NONE);
 
   // Adds some images for the
   #include "images.h"
