@@ -13,15 +13,15 @@ class Command
      * 
      * @param robot - The robot object on which the command operates
      */ 
-    Command(Robot robot) 
-      :robot(robot) {}
+    Command(Robot & robot) 
+      :robot_(robot) {}
 
     // --- Member variables ---
     bool commandRunning = false;
     bool commandSchedule = false;
     bool commandFinished = true;
 
-    Robot robot; 
+    // Robot & robot; 
 
     // Command specific variables
     String direction = ""; // Direction backward/forward to move the robot
@@ -35,6 +35,11 @@ class Command
      * Schedule a new command.  This is called from the WebSite.
      */ 
     void schedule() { commandSchedule = true; }
+
+    /**
+     * Unschedule a new command.  This is called from the WebSite.
+     */ 
+    void unSchedule() { commandSchedule = false; }
 
     /**
      * Is the command scheduled?
@@ -61,10 +66,10 @@ class Command
       // Start the motors
       if (direction.compareTo("F") == 0) {
         Serial.print("Forward ");
-        robot.forward(period, leftPWM, rightPWM);
+        robot_.forward(period, leftPWM, rightPWM);
       } else if (direction.compareTo("B") == 0) {
         Serial.println("Backward ");
-        robot.backward(period, leftPWM, rightPWM);
+        robot_.backward(period, leftPWM, rightPWM);
       } 
 
       // The command is now running and not finished
@@ -75,8 +80,8 @@ class Command
       commandSchedule = false; 
 
       // Save the number of pulses so far
-      int lastLeftPulses = robot.driveTrain.leftWheel.motor.getPulses();
-      int lastRightPulses = robot.driveTrain.rightWheel.motor.getPulses();
+      // int lastLeftPulses = robot_.driveTrain.leftWheel.motor.getPulses();
+      // int lastRightPulses = robot_.driveTrain.rightWheel.motor.getPulses();
 
       // Display labels to the OLED
       clearDisplayBelowHeader();
@@ -93,13 +98,13 @@ class Command
     void execute() {
 
       // If the driveTrain is inactive then the command is finished
-      if (robot.driveTrain.inActive()) {
+      if (robot_.driveTrain.inActive()) {
         commandFinished = true;
       }
 
       // Get the number of pulses from each encoder
-      const int currentLeftPulses = robot.driveTrain.leftWheel.motor.getPulses();
-      const int currentRightPulses = robot.driveTrain.rightWheel.motor.getPulses();
+      const int currentLeftPulses = robot_.driveTrain.leftWheel.motor.getPulses();
+      const int currentRightPulses = robot_.driveTrain.rightWheel.motor.getPulses();
       const int leftPulses = currentLeftPulses - lastLeftPulses;
       const int rightPulses = currentRightPulses - lastRightPulses; 
       
@@ -121,8 +126,8 @@ class Command
         digitalWrite(LED_BUILTIN, LOW);
 
         // Get the number of pulses from each encoder
-        int leftPulsesPerSecond = robot.driveTrain.leftWheel.motor.getPulsesPerSecond();
-        int rightPulsesPerSecond = robot.driveTrain.rightWheel.motor.getPulsesPerSecond();
+        int leftPulsesPerSecond = robot_.driveTrain.leftWheel.motor.getPulsesPerSecond();
+        int rightPulsesPerSecond = robot_.driveTrain.rightWheel.motor.getPulsesPerSecond();
         
         // Display pulses per second for this command to the OLED
         drawText(2, 0, "L");
@@ -136,6 +141,9 @@ class Command
         commandRunning = false;
       }
     }
+
+    private:
+      Robot & robot_;
 
 };
 

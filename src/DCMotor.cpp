@@ -58,12 +58,11 @@ void DCMotor::setSpeed(const int dir,
                        const int timeOut) {
 
   // Save the last pulses value                      
-  pulsesLast_ = encoder.pulses; 
+  pulsesLast_ = encoder.getPulses(); 
 
   // Set the PWM and direction for this wheel
   PWM_ = PWM;
   direction_ = dir;
-  Serial.print("pwm=");Serial.println(PWM_);
 
   // Let the encoder know which direction it's spinning
   encoder.setWheelDirection(direction_);
@@ -71,10 +70,7 @@ void DCMotor::setSpeed(const int dir,
   // Set the timeout to stop the motor
   timeOut_ = timeOut;
   currentStartTime_ = millis();
-  Serial.print("startTime=");Serial.println(currentStartTime_);
-  Serial.print("timeout=");Serial.println(timeOut_);
   running = true;
-  // digitalWrite(LED_BUILTIN, HIGH);
 }
 
 // ----------------------------------------------------------------
@@ -84,9 +80,6 @@ void IRAM_ATTR DCMotor::setPower_() {
 
   portENTER_CRITICAL_ISR(&timerMux);
 
-  checkMillis = millis();
-  Serial.print(checkMillis);Serial.print("|");Serial.println(currentStartTime_);
-  Serial.println(millis() - currentStartTime_);
   // Stop the motor after the timeout period
   if ( (millis() - currentStartTime_) > timeOut_ ) 
   {
@@ -95,7 +88,7 @@ void IRAM_ATTR DCMotor::setPower_() {
 
     // Compute pulses per second for this last motion request
     if (timeOut_ > 0) {
-      const int32_t pulsesThisPeriod = abs(encoder.pulses - pulsesLast_);
+      const int32_t pulsesThisPeriod = abs(encoder.getPulses() - pulsesLast_);
       pulsesPerSec_ = pulsesThisPeriod / (timeOut_ / 1000); // timeOut is in milliseconds
       // Reset the timeout
       timeOut_ = 0;

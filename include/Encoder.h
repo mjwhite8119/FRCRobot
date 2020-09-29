@@ -36,6 +36,8 @@ class Encoder
      */
     void resetEncoder() {pulses = 0;}
 
+    int32_t getPulses() { return pulses; }
+
     void setWheelDirection(const int dir) { wheelDirection = dir; }
 
     static Encoder * instances [2];
