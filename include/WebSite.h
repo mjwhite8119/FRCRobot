@@ -51,9 +51,12 @@ void handleWebServer() {
 
   // Route to forward motor
   server.on("/move", HTTP_GET, [](AsyncWebServerRequest *request){
-    String periodStr = request->arg("value");  
-    direction = request->arg("direction");
-    period = periodStr.toInt();
+    String periodStr = request->arg("value");
+    command.direction = request->arg("direction");
+    command.period = periodStr.toInt();
+    command.schedule();  
+    // direction = request->arg("direction");
+    // period = periodStr.toInt();
     request->send(SPIFFS, "/index2.html", String(), false, processor);
   });
 
@@ -64,7 +67,8 @@ void handleWebServer() {
     if (request->hasParam(PARAM_INPUT)) {
       inputMessage = request->getParam(PARAM_INPUT)->value();
       sliderValueLeft = inputMessage;
-      leftPWM = sliderValueLeft.toInt();
+      command.leftPWM = sliderValueLeft.toInt();
+      // leftPWM = sliderValueLeft.toInt();
     }
     else {
       inputMessage = "No message sent";
@@ -80,7 +84,8 @@ void handleWebServer() {
     if (request->hasParam(PARAM_INPUT)) {
       inputMessage = request->getParam(PARAM_INPUT)->value();
       sliderValueRight = inputMessage;
-      rightPWM = sliderValueRight.toInt();
+      command.rightPWM = sliderValueRight.toInt();
+      // rightPWM = sliderValueRight.toInt();
     }
     else {
       inputMessage = "No message sent";

@@ -2,7 +2,7 @@
 #define _CONFIG_H_
 
 // -------------- Hardware interfaces ----------------
-int LED_BUILTIN = 2;
+inline int LED_BUILTIN = 2;
 
 //---------------------------------------
 // Define the GPIO pins for the motors

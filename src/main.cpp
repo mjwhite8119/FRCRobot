@@ -2,11 +2,15 @@
 #include "config.h"
 #include "OLED.h"
 #include "connectWiFi.h"
-#include "WebSite.h"
+#include "Command.h"
 #include "Robot.h"
 
 // Create robot object
 Robot robot;
+
+Command command(robot);
+
+#include "WebSite.h"
 
 // ----------------------------------------------------------
 // Setup
@@ -43,19 +47,19 @@ void loop() {
   // Must include to handle OTA updates
   ArduinoOTA.handle();
 
-  // Handle requests from the website
-  if (period > 0) {
-    if (direction.compareTo("F") == 0) {
-      Serial.print("Forward ");
-      Serial.print(leftPWM);Serial.print(" ");Serial.println(rightPWM);
-      robot.forward(period, leftPWM, rightPWM);
-    } else if (direction.compareTo("B") == 0) {
-      Serial.println("Backward ");
-      Serial.print(leftPWM);Serial.print(" ");Serial.println(rightPWM);
-      robot.backward(period, leftPWM, rightPWM);
-    } 
-    period = 0; // Reset period
+  // Initialize commands received from the website
+  if (command.isScheduled()) {
+    command.initialize();
+  }  
+
+  // Handle the running command
+  if (command.isRunning()) {
+    command.execute();
   }
-  
+
+  // Run tasks after command is finished
+  if (command.isFinished()) {
+    command.end();
+  }
 
 }

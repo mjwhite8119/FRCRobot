@@ -1,7 +1,7 @@
 #ifndef _DC_MOTOR_H_
 #define _DC_MOTOR_H_
 
-// #include "config.h"
+#include "config.h"
     
 class DCMotor
 {
@@ -44,13 +44,28 @@ class DCMotor
       digitalWrite(motorPinGroup[pinGroup_].motorDir2, level); // Direction HIGH forward, LOW backward
       digitalWrite(motorPinGroup[pinGroup_].motorDir1, (!level)); // Write the opposite value
       
-      // See pinGroup in Config.h
+      // Power the motor. See pinGroup in Config.h
       ledcWrite(pinGroup_, abs(PWM));
+
+      // Flag the running status of the motor
+      if (PWM > 0) {
+        running_ = true;
+      } else {
+        running_ = false;
+      }
     }
+
+    /**
+     * Is the motor currently running
+     * 
+     * @return true/false - The running status of the motor
+     */
+    bool isRunning() { return running_; }
 
   private:
     
-    uint8_t pinGroup_; // motor GPIO pins   
+    uint8_t pinGroup_; // motor GPIO pins  
+    bool running_ = false; // Is the motor currently running 
 };
 
 #endif // _DC_MOTOR_H_
