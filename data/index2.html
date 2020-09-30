@@ -21,12 +21,12 @@
   <span>Adjust left PWM </span>
   <span id="textSliderValueLeft">%SLIDERVALUE1%</span>
   <div class="slidercontainer">  
-    <input type="range" onchange="updateSliderLeft(this)" id="pwmSliderLeft" min="0" max="255" value="%SLIDERVALUE1%" step="1" class="slider">
+    <input type="range" onchange="updateSliderLeft(this)" id="pwmSliderLeft" min="0" max="255" value="%SLIDERVALUE1%" step="5" class="slider">
   </div>
   <span>Adjust right PWM </span>
   <span id="textSliderValueRight">%SLIDERVALUE2%</span>
   <div class="slidercontainer">  
-    <input type="range" onchange="updateSliderRight(this)" id="pwmSliderRight" min="0" max="255" value="%SLIDERVALUE2%" step="1" class="slider">
+    <input type="range" onchange="updateSliderRight(this)" id="pwmSliderRight" min="0" max="255" value="%SLIDERVALUE2%" step="5" class="slider">
   </div>
 <script>
 function updateSliderLeft(element) {

@@ -47,12 +47,12 @@ class Command
     void end();
 
     /**
-     * Schedule a new command.  This is called from the WebSite.
+     * Schedule a new command.  This is called from the Controller class.
      */ 
     void schedule() { commandSchedule = true; }
 
     /**
-     * Unschedule a new command.  This is called from the WebSite.
+     * Unschedule a new command.
      */ 
     void unSchedule() { commandSchedule = false; }
 
@@ -71,11 +71,11 @@ class Command
      */ 
     bool isFinished() { return commandFinished; }
 
-    private:
-      Robot & robot_;
+  private:
+    Robot & robot_;
 
-      double lastLeftPulses_;
-      double lastRightPulses_;
+    double lastLeftPulses_;
+    double lastRightPulses_;
 
 };
 

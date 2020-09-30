@@ -4,13 +4,18 @@
 #include "connectWiFi.h"
 #include "Command.h"
 #include "Robot.h"
+#include "Controller.h"
 
-// Create robot object
+// Create the Robot object
 Robot robot;
 
+// Create the Command object
 Command command(robot);
 
-#include "WebSite.h"
+// Create the Controller object
+Controller controller(command);
+
+// #include "WebSite.h"
 
 // ----------------------------------------------------------
 // Setup
@@ -34,8 +39,8 @@ void setup() {
   // Setup for Over-the-Air updates
   setupOTA();
 
-  // Setup the web pages and listen for incoming web client requests
-  handleWebServer();
+  // Setup the controller webpage
+  controller.init();
 
 }
 
