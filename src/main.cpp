@@ -2,11 +2,18 @@
 #include "config.h"
 #include "OLED.h"
 #include "connectWiFi.h"
-#include "WebSite.h"
+#include "Command.h"
 #include "Robot.h"
+#include "Controller.h"
 
-// Create robot object
+// Create the Robot object
 Robot robot;
+
+// Create the Command object
+Command command(robot);
+
+// Create the Controller object
+Controller controller(command);
 
 // ----------------------------------------------------------
 // Setup
@@ -30,8 +37,8 @@ void setup() {
   // Setup for Over-the-Air updates
   setupOTA();
 
-  // Setup the web pages and listen for incoming web client requests
-  handleWebServer();
+  // Setup the controller webpage
+  controller.init();
 
 }
 
@@ -43,23 +50,19 @@ void loop() {
   // Must include to handle OTA updates
   ArduinoOTA.handle();
 
-  // Handle requests from the website
-  if (period > 0) {
-    if (direction.compareTo("F") == 0) {
-      Serial.println("Forward");
-      robot.forward(period);
-    } else if (direction.compareTo("B") == 0) {
-      Serial.println("Backward");
-      robot.backward(period);
-    } else if (direction.compareTo("L") == 0) {
-      Serial.println("Left");
-      robot.left(period);
-    } else if (direction.compareTo("R") == 0) {
-      Serial.println("Right");
-      robot.right(period);
-    }        
-    period = 0; // Reset period
+  // Initialize commands received from the website
+  if (command.isScheduled()) {
+    command.initialize();
+  }  
+
+  // Handle the running command
+  if (command.isRunning()) {
+    command.execute();
+  }
+
+  // Run tasks after command is finished
+  if (command.isFinished()) {
+    command.end();
   }
   
-
 }

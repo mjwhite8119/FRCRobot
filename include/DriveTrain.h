@@ -33,6 +33,25 @@ class DriveTrain
       rightWheel.motor.applyPower(rightDir, rightWheelSpeed); 
     }
 
+    /**
+     * Returns true if the motors are running
+     * 
+     * @return true/false - Depending on the state of the motors
+     */
+    bool active() {
+      if (leftWheel.motor.isRunning() || rightWheel.motor.isRunning()) {
+        return true;
+      } else {
+        return false;
+      }      
+    }
+
+    /**
+     * Returns true if the motors have stopped
+     * 
+     * @return true/false - Depending on the state of the motors
+     */
+    bool inActive() { return !active(); }
 };
 
 #endif // _DRIVE_TRAIN_H_

@@ -1,7 +1,7 @@
 #ifndef _DC_MOTOR_H_
 #define _DC_MOTOR_H_
 
-// #include "config.h"
+#include "config.h"
     
 class DCMotor
 {
@@ -46,11 +46,25 @@ class DCMotor
       
       // See pinGroup in Config.h
       ledcWrite(pinGroup_, abs(PWM));
+
+      // Flag the running status of the motor
+      if (PWM > 0) {
+        running_ = true;
+      } else {
+        running_ = false;
+      }
     }
 
-  private:
-    
-    uint8_t pinGroup_; // motor GPIO pins   
+    /**
+     * Is the motor currently running
+     * 
+     * @return true/false - The running status of the motor
+     */
+    bool isRunning() { return running_; }
+
+  private:    
+    uint8_t pinGroup_; // motor GPIO pins 
+    bool running_ = false; // Is the motor currently running   
 };
 
 #endif // _DC_MOTOR_H_
