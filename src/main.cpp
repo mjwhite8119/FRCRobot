@@ -4,7 +4,7 @@
 #include "connectWiFi.h"
 #include "Command.h"
 #include "Robot.h"
-#include "Controller.h"
+// #include "Controller.h"
 
 // Create the Robot object
 Robot robot;
@@ -13,9 +13,9 @@ Robot robot;
 Command command(robot);
 
 // Create the Controller object
-Controller controller(command);
+// Controller controller(command);
 
-// #include "WebSite.h"
+#include "WebSite.h"
 
 // ----------------------------------------------------------
 // Setup
@@ -40,7 +40,8 @@ void setup() {
   setupOTA();
 
   // Setup the controller webpage
-  controller.init();
+  // controller.init();
+  handleWebServer();
 
 }
 
