@@ -34,7 +34,10 @@ class Controller
         return;
       }
 
-      server.on("/", HTTP_GET, [this](AsyncWebServerRequest *request) { handleRoot(request); });
+      // server.on("/", HTTP_GET, [this](AsyncWebServerRequest *request) { handleRoot(request); });
+      server.on("/", HTTP_GET, [this](AsyncWebServerRequest *request){
+        request->send(SPIFFS, "/index2.html", String(), false, [this](const String& var) { return processor(var); });
+      });
       
       // Route to load style.css file
       server.on("/style.css", HTTP_GET, [this](AsyncWebServerRequest *request) { handleCSS(request); });

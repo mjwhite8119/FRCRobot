@@ -37,12 +37,16 @@ void handleWebServer() {
   }
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/index3.html", String(), false, processor);
+    request->send(SPIFFS, "/index2.html", String(), false, processor);
   });
   
   // Route to load style.css file
   server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/style.css", "text/css");
+  });
+
+  server.onNotFound([](AsyncWebServerRequest *request){
+    request->send(404, "text/plain", "The robot controller was not found.");
   });
 
   // Route to forward motor
@@ -51,7 +55,7 @@ void handleWebServer() {
     command.direction = request->arg("direction");
     command.period = periodStr.toInt();
     command.schedule();
-    request->send(SPIFFS, "/index3.html", String(), false, processor);
+    request->send(SPIFFS, "/index2.html", String(), false, processor);
   });
 
   // Send a GET request to <ESP_IP>/slider?value=<inputMessage>
