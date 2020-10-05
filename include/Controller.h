@@ -34,13 +34,15 @@ class Controller
         return;
       }
 
-      // server.on("/", HTTP_GET, [this](AsyncWebServerRequest *request) { handleRoot(request); });
+      // Route to display the root index page
       server.on("/", HTTP_GET, [this](AsyncWebServerRequest *request){
         request->send(SPIFFS, "/index2.html", String(), false, [this](const String& var) { return processor(var); });
       });
       
       // Route to load style.css file
-      server.on("/style.css", HTTP_GET, [this](AsyncWebServerRequest *request) { handleCSS(request); });
+      server.on("/style.css", HTTP_GET, [this](AsyncWebServerRequest *request) { 
+        request->send(SPIFFS, "/style.css", "text/css"); 
+      });
 
       // Route to move the motors
       server.on("/move", HTTP_GET, [this](AsyncWebServerRequest *request) { handleMove(request); });
@@ -50,6 +52,11 @@ class Controller
 
       // Send a GET request to /slider2?value=<inputMessage>
       server.on("/slider2", HTTP_GET, [this] (AsyncWebServerRequest *request) { handleSlider2(request); });
+
+      // Display the page not found message
+      server.onNotFound([this](AsyncWebServerRequest *request){
+        request->send(404, "text/plain", "The robot controller was not found.");
+      });
 
       // Begin the WebServer
       server.begin();
@@ -67,26 +74,6 @@ class Controller
         return sliderValueRight_;
       } 
       return String();
-    }
-
-    /**
-     * Display the root index page
-     * 
-     * @param request - The async webserver request
-     */ 
-    void handleRoot(AsyncWebServerRequest *request)
-    {
-      request->send(SPIFFS, "/index2.htm", String(), false, [this](const String& var) { return processor(var); });
-    }
-
-    /**
-     * Display the page CSS
-     * 
-     * @param request - The async webserver request
-     */ 
-    void handleCSS(AsyncWebServerRequest *request)
-    {
-      request->send(SPIFFS, "/style.css", "text/css");
     }
 
     /**
