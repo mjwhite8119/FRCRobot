@@ -34,15 +34,34 @@ void handleWebServer() {
   if(!SPIFFS.begin(true)){
     Serial.println("An Error has occurred while mounting SPIFFS");
     return;
+  } else {
+    Serial.println("SPIFFS Loaded successfully");
+  }
+
+  File file2 = SPIFFS.open("/index3.html");
+  if(!file2){
+      Serial.println("Failed to open file for reading");
+      return;
+  } else {
+    Serial.println("Index file ...");
+    while(file2.available()){
+      Serial.write(file2.read());
+    }
+    file2.close();
   }
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    // request->send(200, "text/plain", "Robot controller found.");
     request->send(SPIFFS, "/index3.html", String(), false, processor);
   });
   
   // Route to load style.css file
   server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/style.css", "text/css");
+  });
+
+  server.onNotFound([](AsyncWebServerRequest *request){
+    request->send(404, "text/plain", "The robot controller was not found.");
   });
 
   // Route to forward motor
