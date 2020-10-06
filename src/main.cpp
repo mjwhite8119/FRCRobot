@@ -4,15 +4,58 @@
 #include "connectWiFi.h"
 #include "Command.h"
 #include "Robot.h"
+#include <Wire.h>
+#include "Controller.h"
 
-// Create robot object
+// Create the Robot object
 Robot robot;
 
-// Create the command object
+// Create the Command object
 Command command(robot);
 
-// WebSite must be included after command is created
-#include "WebSite.h"
+// Create the Controller object
+Controller controller(command);
+
+// ----------------------------------------------------------
+// Scan the I2C bus for devices
+// ----------------------------------------------------------
+void i2cScan() {
+  byte error, address; //variable for error and I2C address
+  int nDevices;
+
+  Serial.println("Scanning...");
+
+  nDevices = 0;
+  for (address = 1; address < 127; address++ )
+  {
+    // The i2c_scanner uses the return value of
+    // the Write.endTransmisstion to see if
+    // a device did acknowledge to the address.
+    Wire.beginTransmission(address);
+    error = Wire.endTransmission();
+
+    if (error == 0)
+    {
+      Serial.print("I2C device found at address 0x");
+      if (address < 16)
+        Serial.print("0");
+      Serial.print(address, HEX);
+      Serial.println("  !");
+      nDevices++;
+    }
+    else if (error == 4)
+    {
+      Serial.print("Unknown error at address 0x");
+      if (address < 16)
+        Serial.print("0");
+      Serial.println(address, HEX);
+    }
+  }
+  if (nDevices == 0)
+    Serial.println("No I2C devices found\n");
+  else
+    Serial.println("done\n");
+}
 
 // ----------------------------------------------------------
 // Setup
@@ -36,8 +79,11 @@ void setup() {
   // Setup for Over-the-Air updates
   setupOTA();
 
-  // Setup the web pages and listen for incoming web client requests
-  handleWebServer();
+  // Diagnostic test for I2C connectivity
+  i2cScan();
+
+  // Setup the controller webpage
+  controller.init();
 
 }
 
