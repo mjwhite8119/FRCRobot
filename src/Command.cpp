@@ -6,14 +6,10 @@
 void Command::initialize() {
 
   // Start the motors
-  if (direction.compareTo("F") == 0) {
-    Serial.print("Forward ");
-    robot_.forward(period, leftPWM, rightPWM);
-  } else if (direction.compareTo("B") == 0) {
-    Serial.println("Backward ");
-    robot_.backward(period, leftPWM, rightPWM);
-  } 
-
+  
+  Serial.print("Move ");
+  robot_.move(period, leftSpeed, rightSpeed);
+  
   // The command is now running and not finished
   commandRunning = true;
   commandFinished = false;

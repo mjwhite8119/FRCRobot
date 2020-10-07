@@ -19,20 +19,16 @@ class DriveTrain
     /**
      * Sets the direction and wheel speed for the motors.
      *
-     * @param leftDir  Direction for left motor.
-     * @param rightDir Direction for right motor.
-     * @param leftWheelSpeed The PWM value to send to the left motor.
-     * @param rightWheelSpeed The PWM value to send to the right motor.
+     * @param leftWheelSpeed - Left wheel speed between -1 and +1
+     * @param rightWheelSpeed - Right wheel speed between -1 and +1
      * @param timeOut - Time that the motor should run before stopping
      */
-    void setWheelSpeeds(const int leftDir,
-                        const int rightDir,
-                        const float leftWheelSpeed, 
+    void setWheelSpeeds(const float leftWheelSpeed, 
                         const float rightWheelSpeed,
                         const int timeOut) 
     {  
-      leftWheel.motor.setSpeed(leftDir, leftWheelSpeed, timeOut); 
-      rightWheel.motor.setSpeed(rightDir, rightWheelSpeed, timeOut); 
+      leftWheel.motor.setSpeed(leftWheelSpeed, timeOut); 
+      rightWheel.motor.setSpeed(rightWheelSpeed, timeOut); 
     }
 
     /**

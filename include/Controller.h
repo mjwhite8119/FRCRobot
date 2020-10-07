@@ -36,7 +36,7 @@ class Controller
 
       // Route to display the root index page
       server.on("/", HTTP_GET, [this](AsyncWebServerRequest *request){
-        request->send(SPIFFS, "/index3.html", String(), false, [this](const String& var) { return processor(var); });
+        request->send(SPIFFS, "/index4.html", String(), false, [this](const String& var) { return processor(var); });
       });
       
       // Route to load style.css file
@@ -84,10 +84,9 @@ class Controller
     void handleMove(AsyncWebServerRequest *request)
     {
       String periodStr = request->arg("value");
-      command_.direction = request->arg("direction");
       command_.period = periodStr.toInt();
       command_.schedule();  
-      request->send(SPIFFS, "/index3.html", String(), false, [this](const String& var) { return processor(var); });
+      request->send(SPIFFS, "/index4.html", String(), false, [this](const String& var) { return processor(var); });
     }   
 
     /**
@@ -102,7 +101,7 @@ class Controller
       if (request->hasParam(PARAM_INPUT)) {
         inputMessage = request->getParam(PARAM_INPUT)->value();
         sliderValueLeft_ = inputMessage;
-        command_.leftPWM = sliderValueLeft_.toInt();
+        command_.leftSpeed = sliderValueLeft_.toFloat();
       }
       else {
         inputMessage = "No message sent";
@@ -123,7 +122,7 @@ class Controller
       if (request->hasParam(PARAM_INPUT)) {
         inputMessage = request->getParam(PARAM_INPUT)->value();
         sliderValueRight_ = inputMessage;
-        command_.rightPWM = sliderValueRight_.toInt();
+        command_.rightSpeed = sliderValueRight_.toFloat();
       }
       else {
         inputMessage = "No message sent";
@@ -135,12 +134,9 @@ class Controller
   private:
     Command & command_;
 
-    String sliderValueLeft_ = "0";
-    String sliderValueRight_ = "0";
-    String direction_ = "";
+    String sliderValueLeft_ = "0.0";
+    String sliderValueRight_ = "0.0";
     int period_ = 0;
-    int leftPWM_ = 0;
-    int rightPWM_ = 0;  
 
 };
 

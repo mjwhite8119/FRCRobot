@@ -25,8 +25,8 @@ class Command
     // Command specific variables
     String direction = ""; // Direction backward/forward to move the robot
     int period = 0; // How long to run the motors
-    int leftPWM = 0; // Motor left PWM value
-    int rightPWM = 0; // Motor right PWM value
+    float leftSpeed = 0; // Motor left speed between -1 and +1
+    float rightSpeed = 0; // Motor right speed between -1 and +1
 
     /**
      * Handles tasks to be performed when a command is scheduled.
