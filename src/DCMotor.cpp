@@ -75,7 +75,7 @@ void DCMotor::setSpeed(const int dir,
 // ----------------------------------------------------------------
 // Set motor power using a PID loop
 // ---------------------------------------------------------------- 
-void IRAM_ATTR DCMotor::setPower_() {
+void DCMotor::setPower_() {
 
   portENTER_CRITICAL_ISR(&timerMux);
 
@@ -86,7 +86,8 @@ void IRAM_ATTR DCMotor::setPower_() {
 
     // Compute pulses per second for this last motion request
     if (timeOut_ > 0) {
-      const int32_t pulsesThisPeriod = abs(encoder.getPulses() - pulsesLast_);
+      const int32_t pulses = encoder.pulses;
+      const int32_t pulsesThisPeriod = abs(pulses - pulsesLast_);
       pulsesPerSec_ = pulsesThisPeriod / (timeOut_ / 1000); // timeOut is in milliseconds
       // Reset the timeout
       timeOut_ = 0;

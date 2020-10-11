@@ -5,6 +5,8 @@
 // -------------------------------------------------------------  
 void Command::initialize() {
 
+  log_d("command initialized %d", period);
+
   // Start the motors
   if (direction.compareTo("F") == 0) {
     Serial.print("Forward ");

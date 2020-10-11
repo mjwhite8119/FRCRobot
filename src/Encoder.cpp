@@ -10,8 +10,8 @@ Encoder::Encoder(uint8_t pinGroup)
   :pinGroup_(pinGroup)
 {   
   // Connect encoder to GPIO pins
-  pinMode(motorPinGroup[pinGroup].encoder, INPUT); //  Left encoder, channel A
-  digitalWrite(motorPinGroup[pinGroup].encoder, HIGH); // turn on pullup resistors
+  pinMode(motorPinGroup[pinGroup].encoder, INPUT_PULLUP); //  Encoder pin
+  // digitalWrite(motorPinGroup[pinGroup].encoder, HIGH); // turn on pullup resistors
 
   // Attach interrupts
   switch (pinGroup)

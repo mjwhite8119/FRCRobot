@@ -87,7 +87,7 @@ class DCMotor
      * @param dir - Direction of motor
      * @param PWM - Power to the motor as a PWM signal
      */
-    void IRAM_ATTR applyPower_(const int dir, const int PWM);
+    void applyPower_(const int dir, const int PWM);
 
     uint8_t pinGroup_; // motor GPIO pins 
 

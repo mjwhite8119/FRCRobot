@@ -1,147 +1,258 @@
-#ifndef _CONTROLLER_H_
-#define _CONTROLLER_H_
-
+// Import required libraries
 #include <WiFi.h>
+#include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
-#include <SPIFFS.h>
 #include "Command.h"
+
+const char* PARAM_INPUT_1 = "output";
+const char* PARAM_INPUT_2 = "state";
+const char* PARAM_INPUT = "value";
+
+String sliderValueLeft = "0";
+String sliderValueRight = "0";
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
 
-class Controller
+const char index_html[] PROGMEM = R"rawliteral(
+<!DOCTYPE HTML><html>
+<head>
+  <title>FRC Training Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <style>
+    html {font-family: Arial; display: inline-block; text-align: center;}
+    input[type=button], input[type=submit], input[type=reset] {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 16px 32px;
+      text-decoration: none;
+      -webkit-appearance: none;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
+    h2 {font-size: 2.3rem;}
+    h3 {font-size: 1.3rem;}
+    p {font-size: 1.9rem;}
+    .label {
+      display: inline-block; 
+      text-align: left; 
+      width: 100px;
+    }
+    body {
+      max-width: 400px; 
+      margin:0px auto; 
+      padding-bottom: 25px;
+    }
+    .container { padding: 7px; 
+      position: relative; 
+      border: none; 
+      margin: 7px;
+    }
+    .slidercontainer { 
+      padding: 1px; 
+      position: relative; 
+      border: none; 
+      margin: 1px; 
+    }
+    .slider { 
+      -webkit-appearance: none; 
+      margin: 14px; 
+      width: 300px; 
+      height: 20px; 
+      background: #4CAF50;
+      outline: none; 
+      -webkit-transition: .2s; 
+      transition: opacity .2s;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none; 
+      appearance: none; 
+      width: 30px; 
+      height: 30px; 
+      background: #000000; 
+      cursor: pointer;
+    }
+    .slider::-moz-range-thumb { 
+      width: 30px; 
+      height: 30px; 
+      background: #000000; 
+      cursor: pointer; 
+    } 
+  </style>
+</head>
+<body>
+  <h2>FRC Training Bot</h2>
+  <h3>Lesson 3</h3>
+  <div class='container'>
+    <h4 class='label'>Forward</h4>
+    %BUTTONPLACEHOLDER1%
+  </div> 
+  <div class='container'>
+    <h4 class='label'>Backward</h4>
+    %BUTTONPLACEHOLDER2%
+  </div> 
+  <span>Adjust Left PWM </span>
+    <span id='textSliderValueLeft'>%SLIDERVALUE1%</span>
+    <div class='slidercontainer'>  
+      <input type='range' onchange='updateSliderLeft(this)' id='pwmSliderLeft' min='0' max='255' value='%SLIDERVALUE1%' step='5' class='slider'>
+    </div>
+    <span>Adjust Right PWM </span>
+    <span id='textSliderValueRight'>%SLIDERVALUE2%</span>
+    <div class='slidercontainer'>  
+      <input type='range' onchange='updateSliderRight(this)' id='pwmSliderRight' min='0' max='255' value='%SLIDERVALUE2%' step='5' class='slider'>
+    </div> 
+<script>
+function toggleCheckbox(element) {
+  var xhr = new XMLHttpRequest();
+  if(element.checked) { 
+    xhr.open("GET", "/update?output="+element.id+"&state=1", true); 
+  }
+  else { 
+    xhr.open("GET", "/update?output="+element.id+"&state=0", true); 
+  }
+  xhr.send();
+}
+function move(element, dir) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/update?output="+element.id+"&state="+dir, true); 
+  xhr.send();
+}
+function updateSliderLeft(element) {
+  var sliderValueLeft = document.getElementById('pwmSliderLeft').value;
+  document.getElementById('textSliderValueLeft').innerHTML = sliderValueLeft;
+  console.log(sliderValueLeft);
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/slider1?value='+sliderValueLeft, true);
+  xhr.send();
+}
+function updateSliderRight(element) {
+  var sliderValueRight = document.getElementById('pwmSliderRight').value;
+  document.getElementById('textSliderValueRight').innerHTML = sliderValueRight;
+  console.log(sliderValueRight);
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/slider2?value='+sliderValueRight, true);
+  xhr.send();
+}
+</script>
+</body>
+</html>
+)rawliteral";
+
+/**
+ * Replaces placeholder with buttons and sliders in the web page
+ * 
+ * @param var - Requested string value from web page
+ */ 
+String processor(const String& var){
+
+  if(var == "BUTTONPLACEHOLDER1"){
+    String buttons = "";
+    buttons += "<input type=\"button\" value=\"1\" onclick=\"move(this, 'F')\" id=\"1\">";
+    buttons += "<input type=\"button\" value=\"2\" onclick=\"move(this, 'F')\" id=\"2\">";
+    buttons += "<input type=\"button\" value=\"3\" onclick=\"move(this, 'F')\" id=\"3\">";
+    return buttons;
+  }
+  if(var == "BUTTONPLACEHOLDER2"){
+    String buttons = "";
+    buttons += "<input type=\"button\" value=\"1\" onclick=\"move(this, 'B')\" id=\"1\">";
+    buttons += "<input type=\"button\" value=\"2\" onclick=\"move(this, 'B')\" id=\"2\">";
+    buttons += "<input type=\"button\" value=\"3\" onclick=\"move(this, 'B')\" id=\"3\">";
+    return buttons;
+  }
+  if (var == "SLIDERVALUE1"){
+    return sliderValueLeft;
+  } else if (var == "SLIDERVALUE2"){
+    return sliderValueRight;
+  } 
+  return String();
+}
+
+/**
+ * Handle the move request
+ * 
+ * @param request - The async webserver request
+ * @param command - Command object
+ */ 
+void handleMove(AsyncWebServerRequest *request, Command & command)
 {
-  public:
+  String periodStr = "0";
+  String direction = "0";
 
-    /**
-     * Constructor
-     * 
-     * @param command - The command object
-     */ 
-    Controller(Command & command) 
-      :command_(command) {}
+  // GET input1 value on <ESP_IP>/update?output=<periodStr>&state=<direction>
+  if (request->hasParam(PARAM_INPUT_1) && request->hasParam(PARAM_INPUT_2)) {
+    periodStr = request->getParam(PARAM_INPUT_1)->value();
+    direction = request->getParam(PARAM_INPUT_2)->value();     
+  }
 
-    const char* PARAM_INPUT = "value";
+  // Log value to the console for debugging
+  log_d("period %s", periodStr);
+  log_d("direction %s", direction);
 
-    /**
-     * Setup the web page used as the controller
-     */ 
-    void init() {
+  // Assign the parameters and schedule the command
+  command.period = periodStr.toInt();
+  command.direction = direction;
+  command.schedule();
 
-      // Start the SPIFFS filesystem to serve the HTML pages
-      if(!SPIFFS.begin(true)){
-        Serial.println("An Error has occurred while mounting SPIFFS");
-        return;
-      }
+  request->send(200, "text/plain", "OK");
+}
 
-      // Route to display the root index page
-      server.on("/", HTTP_GET, [this](AsyncWebServerRequest *request){
-        request->send(SPIFFS, "/index3.html", String(), false, [this](const String& var) { return processor(var); });
-      });
-      
-      // Route to load style.css file
-      server.on("/style.css", HTTP_GET, [this](AsyncWebServerRequest *request) { 
-        request->send(SPIFFS, "/style.css", "text/css"); 
-      });
+/**
+ * Handle the left wheel slider request
+ * 
+ * @param request - The async webserver request
+ * @param command - Command object
+ */ 
+void handleSlider1(AsyncWebServerRequest *request, Command & command)
+{
+  // GET input1 value on <ESP_IP>/slider?value=<inputMessage>
+  if (request->hasParam(PARAM_INPUT)) {
+    sliderValueLeft = request->getParam(PARAM_INPUT)->value();
+    command.leftPWM = sliderValueLeft.toInt();
+  }
+  Serial.println(sliderValueLeft);
+  request->send(200, "text/plain", "OK");
+}
 
-      // Route to move the motors
-      server.on("/move", HTTP_GET, [this](AsyncWebServerRequest *request) { handleMove(request); });
+/**
+ * Handle the right wheel slider request
+ * 
+ * @param request - The async webserver request
+ * @param command - Command object
+ */ 
+void handleSlider2(AsyncWebServerRequest *request, Command & command)
+{
+  // GET input1 value on <ESP_IP>/slider?value=<inputMessage>
+  if (request->hasParam(PARAM_INPUT)) {
+    sliderValueRight = request->getParam(PARAM_INPUT)->value();
+    command.rightPWM = sliderValueRight.toInt();
+  }
+  Serial.println(sliderValueRight);
+  request->send(200, "text/plain", "OK");
+}  
 
-      // Send a GET request to /slider1?value=<inputMessage>
-      server.on("/slider1", HTTP_GET, [this] (AsyncWebServerRequest *request) { handleSlider1(request); });
+void setupController(Command & command){
+  
+  // Route for root / web page
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/html", index_html, processor);
+  });
 
-      // Send a GET request to /slider2?value=<inputMessage>
-      server.on("/slider2", HTTP_GET, [this] (AsyncWebServerRequest *request) { handleSlider2(request); });
+  // Send a GET request to <ESP_IP>/update?output=<periodStr>&state=<direction>
+  server.on("/update", HTTP_GET, [&command] (AsyncWebServerRequest *request) { handleMove(request, command); });
 
-      // Display the page not found message
-      server.onNotFound([this](AsyncWebServerRequest *request){
-        request->send(404, "text/plain", "The robot controller was not found.");
-      });
+  // Send a GET request to /slider1?value=<inputMessage>
+  server.on("/slider1", HTTP_GET, [&command] (AsyncWebServerRequest *request) { handleSlider1(request, command); });
 
-      // Begin the WebServer
-      server.begin();
-    }
+  // Send a GET request to /slider2?value=<inputMessage>
+  server.on("/slider2", HTTP_GET, [&command] (AsyncWebServerRequest *request) { handleSlider2(request, command); });
 
-    /**
-     * Replaces placeholder with slider value in your web page
-     * 
-     * @param var - Requested string value from web page
-     */ 
-    String processor(const String& var){
-      if (var == "SLIDERVALUE1"){
-        return sliderValueLeft_;
-      } else if (var == "SLIDERVALUE2"){
-        return sliderValueRight_;
-      } 
-      return String();
-    }
+  // Display the page not found message
+  server.onNotFound([](AsyncWebServerRequest *request){
+    request->send(404, "text/plain", "The robot controller was not found.");
+  });
 
-    /**
-     * Display the page CSS
-     * 
-     * @param request - The async webserver request
-     */ 
-    void handleMove(AsyncWebServerRequest *request)
-    {
-      String periodStr = request->arg("value");
-      command_.direction = request->arg("direction");
-      command_.period = periodStr.toInt();
-      command_.schedule();  
-      request->send(SPIFFS, "/index3.html", String(), false, [this](const String& var) { return processor(var); });
-    }   
-
-    /**
-     * Display the slider
-     * 
-     * @param request - The async webserver request
-     */ 
-    void handleSlider1(AsyncWebServerRequest *request)
-    {
-      String inputMessage;
-      // GET input1 value on <ESP_IP>/slider?value=<inputMessage>
-      if (request->hasParam(PARAM_INPUT)) {
-        inputMessage = request->getParam(PARAM_INPUT)->value();
-        sliderValueLeft_ = inputMessage;
-        command_.leftPWM = sliderValueLeft_.toInt();
-      }
-      else {
-        inputMessage = "No message sent";
-      }
-      Serial.println(inputMessage);
-      request->send(200, "text/plain", "OK");
-    }
-
-    /**
-     * Display the slider
-     * 
-     * @param request - The async webserver request
-     */ 
-    void handleSlider2(AsyncWebServerRequest *request)
-    {
-      String inputMessage;
-      // GET input1 value on <ESP_IP>/slider?value=<inputMessage>
-      if (request->hasParam(PARAM_INPUT)) {
-        inputMessage = request->getParam(PARAM_INPUT)->value();
-        sliderValueRight_ = inputMessage;
-        command_.rightPWM = sliderValueRight_.toInt();
-      }
-      else {
-        inputMessage = "No message sent";
-      }
-      Serial.println(inputMessage);
-      request->send(200, "text/plain", "OK");
-    }  
-
-  private:
-    Command & command_;
-
-    String sliderValueLeft_ = "0";
-    String sliderValueRight_ = "0";
-    String direction_ = "";
-    int period_ = 0;
-    int leftPWM_ = 0;
-    int rightPWM_ = 0;  
-
-};
-
-#endif // _CONTROLLER_H_
+  // Start server
+  server.begin();
+}
