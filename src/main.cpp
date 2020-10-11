@@ -12,9 +12,6 @@ Robot robot;
 // Create the Command object
 Command command(robot);
 
-// Create the Controller object
-Controller controller(command);
-
 // ----------------------------------------------------------
 // Setup
 // ----------------------------------------------------------
@@ -38,7 +35,7 @@ void setup() {
   setupOTA();
 
   // Setup the controller webpage
-  controller.init();
+  setupController(command);
 
 }
 
