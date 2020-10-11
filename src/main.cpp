@@ -13,9 +13,6 @@ Robot robot;
 // Create the Command object
 Command command(robot);
 
-// Create the Controller object
-Controller controller(command);
-
 // ----------------------------------------------------------
 // Scan the I2C bus for devices
 // ----------------------------------------------------------
@@ -83,7 +80,7 @@ void setup() {
   i2cScan();
 
   // Setup the controller webpage
-  controller.init();
+  setupController(command);
 
 }
 

@@ -61,47 +61,27 @@ void DCMotor::setSpeed(const float wheelSpeed,
 
   // Calculate PWM value required to obtain the required wheel speed
   // kStatic is the minimum PWM value required to move the wheel so
-  // subtract that from the max PWM and calculate a proportional
+  // subtract kStatic from the max PWM and calculate a proportional
   // value using the remainder.
-  Serial.print("wheelspeed="); Serial.println(wheelSpeed);
   const int proportionalPWM = (maxPWM_ - kStatic_) * abs(wheelSpeed);
-  Serial.print("prop="); Serial.println(proportionalPWM);
-
+  
   // Calculate the total PWM value. Has to be at least the kStatic value.
   PWM_ = kStatic_ + proportionalPWM;
-  Serial.print("PWM="); Serial.println(PWM_);
 
   // Let the encoder know which direction it's spinning
-  direction_ = sgn(wheelSpeed);
-  Serial.print("direction="); Serial.println(direction_);
+  direction_ = sgn(wheelSpeed); 
   encoder.setWheelDirection(direction_);
+
+  log_d("wheelspeed = %d", wheelSpeed);
+  log_d("propPWM = %d", proportionalPWM);
+  log_d("PWM = %d", PWM_);
+  log_d("direction = %d", direction_);
+  log_d("TimeOut = %d", timeOut);
 
   // Set the timeout to stop the motor
   timeOut_ = timeOut;
   currentStartTime_ = millis();
 }  
-
-// -------------------------------------------------------- 
-// Set the wheel speeds 
-// --------------------------------------------------------
-void DCMotor::setSpeed(const int dir, 
-                       const int PWM, 
-                       const int timeOut) {
-
-  // Save the last pulses value                      
-  pulsesLast_ = encoder.getPulses(); 
-
-  // Set the PWM and direction for this wheel
-  PWM_ = PWM;
-  direction_ = dir;
-
-  // Let the encoder know which direction it's spinning
-  encoder.setWheelDirection(direction_);
-
-  // Set the timeout to stop the motor
-  timeOut_ = timeOut;
-  currentStartTime_ = millis();
-}
 
 // ----------------------------------------------------------------
 // Set motor power using a PID loop
