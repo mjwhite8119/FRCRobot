@@ -1,4 +1,6 @@
-// Import required libraries
+#ifndef _CONTROLLER_H_
+#define _CONTROLLER_H_
+
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
@@ -246,3 +248,5 @@ void setupController(Command & command){
   // Start server
   server.begin();
 }
+
+#endif // _CONTROLLER_H_
