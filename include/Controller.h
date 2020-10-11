@@ -4,8 +4,8 @@
 #include <ESPAsyncWebServer.h>
 #include "Command.h"
 
-const char* PARAM_INPUT_1 = "output";
-const char* PARAM_INPUT_2 = "state";
+const char* PARAM_INPUT_1 = "period";
+const char* PARAM_INPUT_2 = "direction";
 const char* PARAM_INPUT = "value";
 
 String sliderValueLeft = "0";
@@ -104,19 +104,9 @@ const char index_html[] PROGMEM = R"rawliteral(
       <input type='range' onchange='updateSliderRight(this)' id='pwmSliderRight' min='0' max='255' value='%SLIDERVALUE2%' step='5' class='slider'>
     </div> 
 <script>
-function toggleCheckbox(element) {
-  var xhr = new XMLHttpRequest();
-  if(element.checked) { 
-    xhr.open("GET", "/update?output="+element.id+"&state=1", true); 
-  }
-  else { 
-    xhr.open("GET", "/update?output="+element.id+"&state=0", true); 
-  }
-  xhr.send();
-}
 function move(element, dir) {
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", "/update?output="+element.id+"&state="+dir, true); 
+  xhr.open("GET", "/update?period="+element.id+"&direction="+dir, true); 
   xhr.send();
 }
 function updateSliderLeft(element) {
@@ -180,7 +170,7 @@ void handleMove(AsyncWebServerRequest *request, Command & command)
   String periodStr = "0";
   String direction = "0";
 
-  // GET input1 value on <ESP_IP>/update?output=<periodStr>&state=<direction>
+  // GET input1 value on <ESP_IP>/update?period=<periodStr>&direction=<direction>
   if (request->hasParam(PARAM_INPUT_1) && request->hasParam(PARAM_INPUT_2)) {
     periodStr = request->getParam(PARAM_INPUT_1)->value();
     direction = request->getParam(PARAM_INPUT_2)->value();     
@@ -239,7 +229,7 @@ void setupController(Command & command){
     request->send_P(200, "text/html", index_html, processor);
   });
 
-  // Send a GET request to <ESP_IP>/update?output=<periodStr>&state=<direction>
+  // Send a GET request to <ESP_IP>/update?period=<periodStr>&direction=<direction>
   server.on("/update", HTTP_GET, [&command] (AsyncWebServerRequest *request) { handleMove(request, command); });
 
   // Send a GET request to /slider1?value=<inputMessage>
