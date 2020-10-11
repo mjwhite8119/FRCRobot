@@ -108,7 +108,7 @@ const char index_html[] PROGMEM = R"rawliteral(
 <script>
 function move(element, dir) {
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", "/update?period="+element.id+"&direction="+dir, true); 
+  xhr.open("GET", "/update?period="+element.value+"&direction="+dir, true); 
   xhr.send();
 }
 function updateSliderLeft(element) {
@@ -141,16 +141,16 @@ String processor(const String& var){
 
   if(var == "BUTTONPLACEHOLDER1"){
     String buttons = "";
-    buttons += "<input type=\"button\" value=\"1\" onclick=\"move(this, 'F')\" id=\"1\">";
-    buttons += "<input type=\"button\" value=\"2\" onclick=\"move(this, 'F')\" id=\"2\">";
-    buttons += "<input type=\"button\" value=\"3\" onclick=\"move(this, 'F')\" id=\"3\">";
+    buttons += "<input type=\"button\" value=\"1\" onclick=\"move(this, 'F')\">";
+    buttons += "<input type=\"button\" value=\"2\" onclick=\"move(this, 'F')\">";
+    buttons += "<input type=\"button\" value=\"3\" onclick=\"move(this, 'F')\">";
     return buttons;
   }
   if(var == "BUTTONPLACEHOLDER2"){
     String buttons = "";
-    buttons += "<input type=\"button\" value=\"1\" onclick=\"move(this, 'B')\" id=\"1\">";
-    buttons += "<input type=\"button\" value=\"2\" onclick=\"move(this, 'B')\" id=\"2\">";
-    buttons += "<input type=\"button\" value=\"3\" onclick=\"move(this, 'B')\" id=\"3\">";
+    buttons += "<input type=\"button\" value=\"1\" onclick=\"move(this, 'B')\">";
+    buttons += "<input type=\"button\" value=\"2\" onclick=\"move(this, 'B')\">";
+    buttons += "<input type=\"button\" value=\"3\" onclick=\"move(this, 'B')\">";
     return buttons;
   }
   if (var == "SLIDERVALUE1"){
