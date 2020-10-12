@@ -60,16 +60,16 @@ void DCMotor::setSpeed(const int dir,
   // Save the last pulses value                      
   pulsesLast_ = encoder.getPulses(); 
 
+  // Set the timeout to stop the motor
+  timeOut_ = timeOut;
+  currentStartTime_ = millis();
+
   // Set the PWM and direction for this wheel
   PWM_ = PWM;
   direction_ = dir;
 
   // Let the encoder know which direction it's spinning
   encoder.setWheelDirection(direction_);
-
-  // Set the timeout to stop the motor
-  timeOut_ = timeOut;
-  currentStartTime_ = millis();
 }
 
 // ----------------------------------------------------------------
