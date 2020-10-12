@@ -59,6 +59,10 @@ void DCMotor::setSpeed(const float wheelSpeed,
   // Save the last pulses value                      
   pulsesLast_ = encoder.getPulses(); 
 
+  // Set the timeout to stop the motor
+  timeOut_ = timeOut;
+  currentStartTime_ = millis();
+
   // Calculate PWM value required to obtain the required wheel speed
   // kStatic is the minimum PWM value required to move the wheel so
   // subtract kStatic from the max PWM and calculate a proportional
@@ -78,9 +82,6 @@ void DCMotor::setSpeed(const float wheelSpeed,
   log_d("direction = %d", direction_);
   log_d("TimeOut = %d", timeOut);
 
-  // Set the timeout to stop the motor
-  timeOut_ = timeOut;
-  currentStartTime_ = millis();
 }  
 
 // ----------------------------------------------------------------
