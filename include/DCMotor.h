@@ -72,7 +72,7 @@ class DCMotor
     int32_t pulsesPerSec_ = 0;
     bool running_ = false; // Current running status of the motor
 
-    int kStatic_ = 180; // Minimum PWM required to get the motor moving
+    int kStatic_ = 170; // Minimum PWM required to get the motor moving
     int maxPWM_ = 250; // Maximum  PWM value
     
     /**
