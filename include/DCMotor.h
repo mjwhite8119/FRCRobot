@@ -57,7 +57,7 @@ class DCMotor
     /**
      * Returns the number of pulses per second.
      */
-    int32_t getPulsesPerSecond() const {return pulsesPerSec_;}
+    int32_t getAvgPulsesPerSecond() const {return avgPulsesPerSec_;}
 
   private:
     
