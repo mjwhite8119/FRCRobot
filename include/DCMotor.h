@@ -64,6 +64,7 @@ class DCMotor
 
   private:
     
+    // Variable added in lesson 1
     uint8_t pinGroup_; // motor GPIO pins  
     bool running_ = false; // Is the motor currently running 
 };
