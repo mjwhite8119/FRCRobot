@@ -117,11 +117,4 @@ void IRAM_ATTR DCMotor::applyPower_(const int dir, const int PWM) {
   
   // Send the PWM signal to the motor. See pinGroup in Config.h
   ledcWrite(pinGroup_, abs(PWM));
-
-  // Set the running status of the motor
-  if (PWM > 0) {
-    running_ = true;
-  } else {
-    running_ = false;
-  }
 }

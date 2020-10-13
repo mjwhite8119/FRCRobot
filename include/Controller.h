@@ -95,6 +95,7 @@ const char index_html[] PROGMEM = R"rawliteral(
     <h4 class='label'>Backward</h4>
     %BUTTONPLACEHOLDER2%
   </div> 
+  <p></p>
   <span>Adjust Left PWM </span>
     <span id='textSliderValueLeft'>%SLIDERVALUE1%</span>
     <div class='slidercontainer'>  
