@@ -56,19 +56,12 @@ DCMotor::DCMotor(const uint8_t pinGroup)
 void DCMotor::setSpeed(const float wheelSpeed, 
                        const int timeOut) {
 
-  // Save the last pulses value                      
+  // Save the pulses at the start of this request                     
   startingPulses_ = encoder.getPulses(); 
 
   // Set the timeout to stop the motor
   timeOut_ = timeOut;
   currentStartTime_ = millis();
-
-  // Calculate PWM value required to obtain the required wheel speed
-  // kStatic is the minimum PWM value required to move the wheel so
-  // subtract kStatic from the max PWM and calculate a proportional
-  // value using the remainder.
-  // Calculate the total PWM value. Has to be at least the kStatic value.
-  PWM_ = kStaticPWM_ + (kVelocityPWM_ * abs(wheelSpeed));
 
   // Compute feed forward PWM
   // kStatic is the minimum PWM value required to move the wheel. 
@@ -134,11 +127,4 @@ void IRAM_ATTR DCMotor::applyPower_(const int dir, const int PWM) {
   
   // Send the PWM signal to the motor. See pinGroup in Config.h
   ledcWrite(pinGroup_, abs(PWM));
-
-  // Set the running status of the motor
-  if (PWM > 0) {
-    running_ = true;
-  } else {
-    running_ = false;
-  }
 }

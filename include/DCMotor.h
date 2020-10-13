@@ -44,7 +44,7 @@ class DCMotor
      * 
      * @return true/false - The running status of the motor
      */
-    bool isRunning() { return running_; }
+    bool isRunning() { return PWM_ > 0; }
 
     /**
      * Returns the current PWM value for this motor.
@@ -65,10 +65,9 @@ class DCMotor
     
     // Variables added lesson 1
     uint8_t pinGroup_; // motor GPIO pins 
-    bool running_ = false; // Current running status of the motor
-
-    // Variables added lesson 3
     int PWM_ = 0; // Current PWM
+
+    // Variables added lesson 3   
     int direction_ = 0; // Direction of the motor
     int timeOut_ = 0; // Length of time motor runs
     unsigned long currentStartTime_ = 0; // Start time for this move request
