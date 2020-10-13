@@ -44,30 +44,6 @@ class Robot
     }
 
     /**
-     * Spin the robot to the left
-     * 
-     * @param period - Period to run the motor in seconds
-     */ 
-    // void left(const int period, const int PWM) {
-    //   driveTrain.setWheelSpeeds(-1, 1, PWM, PWM);
-    //   digitalWrite(LED_BUILTIN, HIGH);
-    //   delay(period*1000);
-    //   stop();
-    // }
-
-    /**
-     * Spin the robot to the right
-     * 
-     * @param period - Period to run the motor in seconds
-     */ 
-    // void right(const int period, const int PWM) {
-    //   driveTrain.setWheelSpeeds(1, -1, PWM, PWM);
-    //   digitalWrite(LED_BUILTIN, HIGH);
-    //   delay(period*1000);
-    //   stop();
-    // }
-
-    /**
      * Stop the robot
      */ 
     void stop() {
