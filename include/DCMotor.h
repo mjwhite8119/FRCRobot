@@ -61,18 +61,21 @@ class DCMotor
     /**
      * Returns the number of pulses per second.
      */
-    int32_t getPulsesPerSecond() const {return pulsesPerSec_;}
+    int32_t getAvgPulsesPerSecond() const {return avgPulsesPerSec_;}
 
   private:
     
-    // Motor speed variables
+    // Variables added lesson 1
+    uint8_t pinGroup_; // motor GPIO pins 
+    bool running_ = false; // Current running status of the motor
+
+    // Variables added lesson 3
     int PWM_ = 0; // Current PWM
     int direction_ = 0; // Direction of the motor
     int timeOut_ = 0; // Length of time motor runs
-    unsigned long currentStartTime_ = 0; // Start time for this request
-    int32_t pulsesLast_ = 0; 
-    int32_t pulsesPerSec_ = 0;
-    bool running_ = false; // Current running status of the motor
+    unsigned long currentStartTime_ = 0; // Start time for this move request
+    int32_t startingPulses_ = 0; // Pulses at the start of the move request
+    int32_t avgPulsesPerSec_ = 0; // Average PPS for the move request
     
     /**
      * Set motor power. This function is run every 25ms from the timer interrupt
@@ -88,8 +91,6 @@ class DCMotor
      * @param PWM - Power to the motor as a PWM signal
      */
     void applyPower_(const int dir, const int PWM);
-
-    uint8_t pinGroup_; // motor GPIO pins 
 
     static DCMotor * instances [2];
 

@@ -58,7 +58,7 @@ void DCMotor::setSpeed(const int dir,
                        const int timeOut) {
 
   // Save the last pulses value                      
-  pulsesLast_ = encoder.getPulses(); 
+  startingPulses_ = encoder.getPulses(); 
 
   // Set the timeout to stop the motor
   timeOut_ = timeOut;
@@ -87,8 +87,8 @@ void DCMotor::setPower_() {
     // Compute pulses per second for this last motion request
     if (timeOut_ > 0) {
       const int32_t pulses = encoder.pulses;
-      const int32_t pulsesThisPeriod = abs(pulses - pulsesLast_);
-      pulsesPerSec_ = pulsesThisPeriod / (timeOut_ / 1000); // timeOut is in milliseconds
+      const int32_t pulsesThisPeriod = abs(pulses - startingPulses_);
+      avgPulsesPerSec_ = pulsesThisPeriod / (timeOut_ / 1000); // timeOut is in milliseconds
       // Reset the timeout
       timeOut_ = 0;
     }
