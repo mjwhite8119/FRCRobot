@@ -30,10 +30,14 @@ class DCMotor
     /**
      * Apply power to the motor
      * 
-     * @param dir Direction of motor.
-     * @param PWM The PWM value to send to the motor.
+     * @param dir - Direction of motor.
+     * @param PWM - The PWM value to send to the motor.
      */
     void applyPower(const int dir, const int PWM) {
+
+      // Set the object PWM_ variable
+      PWM_ = PWM;
+      
       int level;
       if(dir >= 0) {
         level = HIGH; 
@@ -46,13 +50,6 @@ class DCMotor
       
       // See pinGroup in Config.h
       ledcWrite(pinGroup_, abs(PWM));
-
-      // Flag the running status of the motor
-      if (PWM > 0) {
-        running_ = true;
-      } else {
-        running_ = false;
-      }
     }
 
     /**
@@ -60,11 +57,11 @@ class DCMotor
      * 
      * @return true/false - The running status of the motor
      */
-    bool isRunning() { return running_; }
+    bool isRunning() { return PWM_ > 0; }
 
   private:    
     uint8_t pinGroup_; // motor GPIO pins 
-    bool running_ = false; // Is the motor currently running   
+    int PWM_ = 0; // PWM value for the motor   
 };
 
 #endif // _DC_MOTOR_H_
