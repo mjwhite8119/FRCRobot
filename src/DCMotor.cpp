@@ -57,7 +57,7 @@ void DCMotor::setSpeed(const float wheelSpeed,
                        const int timeOut) {
 
   // Save the last pulses value                      
-  pulsesLast_ = encoder.getPulses(); 
+  startingPulses_ = encoder.getPulses(); 
 
   // Set the timeout to stop the motor
   timeOut_ = timeOut;
@@ -67,17 +67,14 @@ void DCMotor::setSpeed(const float wheelSpeed,
   // kStatic is the minimum PWM value required to move the wheel so
   // subtract kStatic from the max PWM and calculate a proportional
   // value using the remainder.
-  const int proportionalPWM = (maxPWM_ - kStatic_) * abs(wheelSpeed);
-  
   // Calculate the total PWM value. Has to be at least the kStatic value.
-  PWM_ = kStatic_ + proportionalPWM;
+  PWM_ = kStaticPWM_ + (kVelocityPWM_ * abs(wheelSpeed));
 
   // Let the encoder know which direction it's spinning
   direction_ = sgn(wheelSpeed); 
   encoder.setWheelDirection(direction_);
 
   log_d("wheelspeed = %d", wheelSpeed);
-  log_d("propPWM = %d", proportionalPWM);
   log_d("PWM = %d", PWM_);
   log_d("direction = %d", direction_);
   log_d("TimeOut = %d", timeOut);
@@ -98,8 +95,8 @@ void IRAM_ATTR DCMotor::setPower_() {
 
     // Compute pulses per second for this last motion request
     if (timeOut_ > 0) {
-      const int32_t pulsesThisPeriod = abs(encoder.getPulses() - pulsesLast_);
-      pulsesPerSec_ = pulsesThisPeriod / (timeOut_ / 1000); // timeOut is in milliseconds
+      const int32_t pulsesThisPeriod = abs(encoder.getPulses() - startingPulses_);
+      avgPulsesPerSec_ = pulsesThisPeriod / (timeOut_ / 1000); // timeOut is in milliseconds
       // Reset the timeout
       timeOut_ = 0;
     }

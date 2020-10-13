@@ -62,8 +62,8 @@ void Command::end() {
     digitalWrite(LED_BUILTIN, LOW);
 
     // Get the number of pulses from each encoder
-    int leftPulsesPerSecond = robot_.driveTrain.leftWheel.motor.getPulsesPerSecond();
-    int rightPulsesPerSecond = robot_.driveTrain.rightWheel.motor.getPulsesPerSecond();
+    int leftPulsesPerSecond = robot_.driveTrain.leftWheel.motor.getAvgPulsesPerSecond();
+    int rightPulsesPerSecond = robot_.driveTrain.rightWheel.motor.getAvgPulsesPerSecond();
     
     // Display pulses per second for this command to the OLED
     drawText(2, 0, "L");
