@@ -57,28 +57,37 @@ void DCMotor::setSpeed(const float wheelSpeed,
                        const int timeOut) {
 
   // Save the last pulses value                      
-  pulsesLast_ = encoder.getPulses(); 
+  startingPulses_ = encoder.getPulses(); 
+
+  // Log the wheel speed proportion to calculate feedforward
+  wheelSpeedProportion_ = wheelSpeed;
 
   // Set the timeout to stop the motor
   timeOut_ = timeOut;
   currentStartTime_ = millis();
 
-  // Calculate PWM value required to obtain the required wheel speed
-  // kStatic is the minimum PWM value required to move the wheel so
-  // subtract kStatic from the max PWM and calculate a proportional
-  // value using the remainder.
-  const int proportionalPWM = (maxPWM_ - kStatic_) * abs(wheelSpeed);
-  
-  // Calculate the total PWM value. Has to be at least the kStatic value.
-  PWM_ = kStatic_ + proportionalPWM;
+  // Compute feed forward PWM
+  // kStatic is the minimum PWM value required to move the wheel. 
+  // kVelocity is the additional PWM required to maintain the 
+  // requested velocity.
+  feedForwardPWM_ = kStaticPWM_ + (kVelocityPWM_ * abs(wheelSpeed));
+
+  // Translate the speed ratio into pulses per/sec.
+  // Where speed ratio of 1.0 equals 200 pulses per/sec
+  pulseSetpoint_ = int(maxPulsesPerSecond_ * wheelSpeed);
+
+  // Don't go over max pulses/sec
+  if (abs(pulseSetpoint_) > maxPulsesPerSecond_) {
+    pulseSetpoint_ = maxPulsesPerSecond_;
+  }
 
   // Let the encoder know which direction it's spinning
   direction_ = sgn(wheelSpeed); 
   encoder.setWheelDirection(direction_);
 
-  log_d("wheelspeed = %d", wheelSpeed);
-  log_d("propPWM = %d", proportionalPWM);
-  log_d("PWM = %d", PWM_);
+  log_d("wheelspeed = %2.1f", wheelSpeed);
+  log_d("pulseSetpoint = %d", pulseSetpoint_);
+  log_d("feedForwardPWM = %d", feedForwardPWM_);
   log_d("direction = %d", direction_);
   log_d("TimeOut = %d", timeOut);
 
@@ -92,18 +101,40 @@ void IRAM_ATTR DCMotor::setPower_() {
   portENTER_CRITICAL_ISR(&timerMux);
 
   // Stop the motor after the timeout period
-  if ( (millis() - currentStartTime_) > timeOut_ ) 
-  {
+  if ( (millis() - currentStartTime_) > timeOut_ ) {
     PWM_ = 0;
+    pulseSetpoint_ = 0;
 
     // Compute pulses per second for this last motion request
     if (timeOut_ > 0) {
-      const int32_t pulsesThisPeriod = abs(encoder.getPulses() - pulsesLast_);
-      pulsesPerSec_ = pulsesThisPeriod / (timeOut_ / 1000); // timeOut is in milliseconds
+      const int32_t pulsesThisPeriod = abs(encoder.getPulses() - startingPulses_);
+      avgPulsesPerSec_ = pulsesThisPeriod / (timeOut_ / 1000); // timeOut is in milliseconds
       // Reset the timeout
       timeOut_ = 0;
     }
+
   }  
+  else // Motors are running so adjust speed based on encoder pulses
+  {
+    
+    // Get the number of pulses since the last period
+    const int32_t pulses = encoder.pulses;  
+    const int32_t pulsesThisPeriod = abs(pulses - pulsesLast_);
+       
+    // Save the last pulses
+    pulsesLast_ = pulses;
+  
+    // Compute the error between requested pulses/sec and actual pulses/sec
+    pulsesPerSec_ = pulsesThisPeriod * periodsPerSec;
+    error_ = abs(pulseSetpoint_) - pulsesPerSec_; 
+    
+    // PI control
+    pPart_ = Kp * error_; // Proportional
+  
+    // Compute the PWM
+    PWM_ = int(pPart_ + feedForwardPWM_);
+    
+  } // End else
 
   // Apply the power with the direction and PWM signal
   applyPower_(direction_, PWM_);

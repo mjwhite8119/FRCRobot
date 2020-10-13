@@ -25,8 +25,6 @@ class DCMotor
     // Encoder attached to the motor
     Encoder encoder;
 
-    // const int maxPulsesPerSecond = 700; 
-
     // Mutex for protecting critical code in interrupts
     portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 
@@ -63,17 +61,33 @@ class DCMotor
 
   private:
     
-    // Motor speed variables
+    // Variables added lesson 1
+    uint8_t pinGroup_; // motor GPIO pins 
+    bool running_ = false; // Current running status of the motor
+
+    // Variables added lesson 3
     int PWM_ = 0; // Current PWM
     int direction_ = 0; // Direction of the motor
     int timeOut_ = 0; // Length of time motor runs
-    unsigned long currentStartTime_ = 0; // Start time for this request
-    int32_t pulsesLast_ = 0; 
-    int32_t pulsesPerSec_ = 0;
-    bool running_ = false; // Current running status of the motor
+    unsigned long currentStartTime_ = 0; // Start time for this move request
+    int32_t startingPulses_ = 0; // Pulses at the start of the move request
+    int32_t avgPulsesPerSec_ = 0; // Average PPS for the move request
 
-    int kStatic_ = 170; // Minimum PWM required to get the motor moving
-    int maxPWM_ = 250; // Maximum  PWM value
+    // Variables added lesson 4
+    const int maxPWM_ = 250; // Maximum  PWM value
+    const int kStaticPWM_ = 170; // Minimum PWM required to get the motor moving
+    const int kVelocityPWM_ = (maxPWM_ - kStaticPWM_); // Additional PWM to maintain the requested velocity
+    int feedForwardPWM_ = 0; // Total PWM required to keep motor running at set velocity
+
+    // Variables added lesson 5
+    int pulseSetpoint_ = 0; // The setpoint number of pulses per second to run the motors
+    float wheelSpeedProportion_ = 0; // Speed proportion between -1 and +1
+    int32_t pulsesPerSec_ = 0; // Actual number of PPS that the motors are running at
+    int32_t pulsesLast_ = 0; // Pulses at end of last move request
+    const int maxPulsesPerSecond_ = 200; // Max PPS that the motors can run at
+    int error_ = 0; // PI control    
+    float pPart_ = 0.0;
+    const float Kp = 0.17;
     
     /**
      * Set motor power. This function is run every 25ms from the timer interrupt
@@ -89,8 +103,6 @@ class DCMotor
      * @param PWM - Power to the motor as a PWM signal
      */
     void IRAM_ATTR applyPower_(const int dir, const int PWM);
-
-    uint8_t pinGroup_; // motor GPIO pins 
 
     static DCMotor * instances [2];
 
