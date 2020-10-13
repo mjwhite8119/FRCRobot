@@ -70,6 +70,15 @@ void DCMotor::setSpeed(const float wheelSpeed,
   // Calculate the total PWM value. Has to be at least the kStatic value.
   PWM_ = kStaticPWM_ + (kVelocityPWM_ * abs(wheelSpeed));
 
+  // Compute feed forward PWM
+  // kStatic is the minimum PWM value required to move the wheel. 
+  // kVelocity is the additional PWM required to maintain the 
+  // requested velocity.
+  feedForwardPWM_ = kStaticPWM_ + (kVelocityPWM_ * abs(wheelSpeed));
+
+  // Set the PWM value to the feedForward
+  PWM_ = feedForwardPWM_;
+
   // Let the encoder know which direction it's spinning
   direction_ = sgn(wheelSpeed); 
   encoder.setWheelDirection(direction_);

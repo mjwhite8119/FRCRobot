@@ -79,7 +79,8 @@ class DCMotor
     const int maxPWM_ = 250; // Maximum  PWM value
     const int kStaticPWM_ = 170; // Minimum PWM required to get the motor moving
     const int kVelocityPWM_ = (maxPWM_ - kStaticPWM_); // Additional PWM to maintain the requested velocity
-    
+    int feedForwardPWM_ = 0; // Total value to keep the robot moving at the requested velocity
+
     /**
      * Set motor power. This function is run every 25ms from the timer interrupt
      * It checks to see if the timeout period has expired in which case it stops
