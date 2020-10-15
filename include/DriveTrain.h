@@ -7,7 +7,9 @@ class DriveTrain
 {
   public:
     
-    // Constructor
+    /**
+     * Constructor for driveTrain
+     */ 
     DriveTrain() {}
 
     const uint8_t leftWheelPinGroup = 0; // GPIO pin group. See config.h

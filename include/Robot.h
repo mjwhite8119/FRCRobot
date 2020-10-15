@@ -7,11 +7,11 @@ class Robot
 {
   public:
 
-    // --- Constructor ---
+    /**
+     * Constructor for Robot
+     */ 
     Robot() {}
     
-    // --- Member classes (Robot configuration) ---
-
     // Drive train of robot
     DriveTrain driveTrain;
 

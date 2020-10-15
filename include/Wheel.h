@@ -7,8 +7,10 @@ class Wheel
 { 
   public:   
 
-    // Default constructor
-    Wheel() {}
+    /**
+     * Constructor for powered wheels.
+     */ 
+    Wheel() {} // Default constructor
     
     /**
      * Constructor for powered wheels.  The pin group is passed 
@@ -22,6 +24,7 @@ class Wheel
 
     // -------------------- Member variables -----------------  
     DCMotor motor;
+
     float diameter = 0.057; // wheel diameter in meters
 };
 

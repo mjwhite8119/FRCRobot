@@ -6,7 +6,10 @@
 class DCMotor
 {
   public:
-        
+
+    /**
+     * Constructor for DCMotor
+     */     
     DCMotor() {} // Default constructor
 
     /**
