@@ -76,7 +76,7 @@ class DCMotor
 
     // Variables added lesson 4
     const int maxPWM_ = 250; // Maximum  PWM value
-    const int kStaticPWM_ = 170; // Minimum PWM required to get the motor moving
+    const int kStaticPWM_ = 160; // Minimum PWM required to get the motor moving
     const int kVelocityPWM_ = (maxPWM_ - kStaticPWM_); // Additional PWM to maintain the requested velocity
     int feedForwardPWM_ = 0; // Total value to keep the robot moving at the requested velocity
 
