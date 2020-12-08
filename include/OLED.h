@@ -140,6 +140,7 @@ inline void drawIPAddress(const uint16_t lineNumber, const uint16_t startPositio
  */ 
 inline void setupOLED()
 {
+  #if USE_OLED
   // start the display
   u8g2.begin();
 
@@ -148,7 +149,8 @@ inline void setupOLED()
 
   // setup font
   u8g2.setFontMode(0);
-  u8g2.setFont(u8g2_font_t0_11_mr);         
+  u8g2.setFont(u8g2_font_t0_11_mr); 
+  #endif        
 }
 
 #endif // _OLED_H_
