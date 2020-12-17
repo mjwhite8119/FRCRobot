@@ -19,7 +19,7 @@ AsyncWebServer server(80);
 const char index_html[] PROGMEM = R"rawliteral(
 <!DOCTYPE HTML><html>
 <head>
-  <title>FRC Training Bot</title>
+  <title>FRC BabyBot</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="data:,">
   <style>
@@ -28,7 +28,7 @@ const char index_html[] PROGMEM = R"rawliteral(
       background-color: #4CAF50;
       border: none;
       color: white;
-      padding: 16px 32px;
+      padding: 16px 30px;
       text-decoration: none;
       -webkit-appearance: none;
       margin: 4px 2px;
@@ -40,17 +40,17 @@ const char index_html[] PROGMEM = R"rawliteral(
     .label {
       display: inline-block; 
       text-align: left; 
-      width: 100px;
+      width: 90px;
     }
     body {
-      max-width: 400px; 
+      max-width: 430px; 
       margin:0px auto; 
       padding-bottom: 25px;
     }
-    .container { padding: 7px; 
+    .container { padding: 5px; 
       position: relative; 
       border: none; 
-      margin: 7px;
+      margin: 5px;
     }
     .slidercontainer { 
       padding: 1px; 
@@ -85,7 +85,7 @@ const char index_html[] PROGMEM = R"rawliteral(
   </style>
 </head>
 <body>
-  <h2>FRC Training Bot</h2>
+  <h2>FRC BabyBot</h2>
   <h3>Lesson 1</h3>
   <div class='container'>
     <h4 class='label'>Forward</h4>
