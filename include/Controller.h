@@ -18,7 +18,7 @@ AsyncWebServer server(80);
 const char index_html[] PROGMEM = R"rawliteral(
 <!DOCTYPE HTML><html>
 <head>
-  <title>FRC Training Bot</title>
+  <title>FRC BabyBot</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="data:,">
   <style>
@@ -84,7 +84,7 @@ const char index_html[] PROGMEM = R"rawliteral(
   </style>
 </head>
 <body>
-  <h2>FRC Training Bot</h2>
+  <h2>FRC BabyBot</h2>
   <h3>Lesson 5</h3>
   <div class='container'>
     <h4 class='label'>Move (seconds)</h4>
