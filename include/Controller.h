@@ -28,19 +28,25 @@ const char index_html[] PROGMEM = R"rawliteral(
       background-color: #4CAF50;
       border: none;
       color: white;
-      padding: 16px 30px;
+      padding: 14px 25px;
       text-decoration: none;
       -webkit-appearance: none;
       margin: 4px 2px;
       cursor: pointer;
     }
-    h2 {font-size: 2.3rem;}
-    h3 {font-size: 1.3rem;}
+    h2 {font-size: 2.3rem;
+        margin-top: 0.50em;
+        margin-bottom: 0.30em;
+    }
+    h3 {font-size: 1.3rem;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
     p {font-size: 1.9rem;}
     .label {
       display: inline-block; 
       text-align: left; 
-      width: 90px;
+      width: 80px;
     }
     body {
       max-width: 430px; 
