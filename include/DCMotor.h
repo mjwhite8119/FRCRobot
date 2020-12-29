@@ -55,6 +55,11 @@ class DCMotor
     int32_t getPulses() const {return encoder.pulses;}
 
     /**
+     * Returns the current total number pulses per second.
+     */
+    int32_t getCurrentPulsesPerSecond() const {return currentPulsesPerSec_;}
+
+    /**
      * Returns the number of pulses per second.
      */
     int32_t getAvgPulsesPerSecond() const {return avgPulsesPerSec_;}
@@ -74,18 +79,15 @@ class DCMotor
 
     // Variables added lesson 4
     const int maxPWM_ = 250; // Maximum  PWM value
-    const int kStaticPWM_ = 170; // Minimum PWM required to get the motor moving
+    const int kStaticPWM_ = 160; // Minimum PWM required to get the motor moving
     const int kVelocityPWM_ = (maxPWM_ - kStaticPWM_); // Additional PWM to maintain the requested velocity
     int feedForwardPWM_ = 0; // Total PWM required to keep motor running at set velocity
+    int32_t lastPulses_ = 0; // Saved pulses from the last time period 
+    int32_t currentPulsesPerSec_ = 0; // Current pulses per second
 
     // Variables added lesson 5
     int pulseSetpoint_ = 0; // The setpoint number of pulses per second to run the motors
-    float wheelSpeedProportion_ = 0; // Speed proportion between -1 and +1
-    int32_t pulsesPerSec_ = 0; // Actual number of PPS that the motors are running at
-    int32_t pulsesLast_ = 0; // Pulses at end of last move request
-    const int maxPulsesPerSecond_ = 200; // Max PPS that the motors can run at
-    int error_ = 0; // PI control    
-    float pPart_ = 0.0;
+    const int maxPulsesPerSecond_ = 200; // Max PPS that the motors can run at  
     const float Kp = 0.17;
     
     /**

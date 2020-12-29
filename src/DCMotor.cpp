@@ -59,9 +59,6 @@ void DCMotor::setSpeed(const float wheelSpeed,
   // Save the last pulses value                      
   startingPulses_ = encoder.getPulses(); 
 
-  // Log the wheel speed proportion to calculate feedforward
-  wheelSpeedProportion_ = wheelSpeed;
-
   // Set the timeout to stop the motor
   timeOut_ = timeOut;
   currentStartTime_ = millis();
@@ -117,22 +114,22 @@ void IRAM_ATTR DCMotor::setPower_() {
   else // Motors are running so adjust speed based on encoder pulses
   {
     
-    // Get the number of pulses since the last period
-    const int32_t pulses = encoder.pulses;  
-    const int32_t pulsesThisPeriod = abs(pulses - pulsesLast_);
-       
+    // Calculate pulses per second
+    const int32_t pulses = encoder.getPulses();
+    const int32_t pulsesThisPeriod = abs(pulses - lastPulses_);
+    currentPulsesPerSec_ = pulsesThisPeriod * periodsPerSec;
+    
     // Save the last pulses
-    pulsesLast_ = pulses;
+    lastPulses_ = pulses;
   
     // Compute the error between requested pulses/sec and actual pulses/sec
-    pulsesPerSec_ = pulsesThisPeriod * periodsPerSec;
-    error_ = abs(pulseSetpoint_) - pulsesPerSec_; 
+    const int error = abs(pulseSetpoint_) - currentPulsesPerSec_; 
     
     // PI control
-    pPart_ = Kp * error_; // Proportional
+    const float pPart = Kp * error; // Proportional
   
     // Compute the PWM
-    PWM_ = int(pPart_ + feedForwardPWM_);
+    PWM_ = int(pPart + feedForwardPWM_);
     
   } // End else
 

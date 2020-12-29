@@ -20,9 +20,18 @@ class Wheel
     Wheel(const uint8_t pinGroup) 
       :motor(pinGroup) {}
 
+    /**
+     * Returns the current velocity per second.
+     */
+    float getVelocityPerSecond() 
+      {return (distancePerPulse * motor.getCurrentPulsesPerSecond());}    
+
     // -------------------- Member variables -----------------  
     DCMotor motor;
-    float diameter = 0.057; // wheel diameter in meters
+    const float diameter = 0.066; // wheel diameter in meters
+    const float distancePerRevolution = PI * diameter; // Linear distance per/wheel rovolution
+    const float distancePerPulse = distancePerRevolution / motor.encoder.PPR; // distance per/encoder pulse
+
 };
 
 #endif // _WHEEL_H_
