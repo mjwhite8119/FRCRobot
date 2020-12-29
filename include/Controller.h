@@ -18,7 +18,7 @@ AsyncWebServer server(80);
 const char index_html[] PROGMEM = R"rawliteral(
 <!DOCTYPE HTML><html>
 <head>
-  <title>FRC Training Bot</title>
+  <title>FRC BabyBot</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="data:,">
   <style>
@@ -27,19 +27,25 @@ const char index_html[] PROGMEM = R"rawliteral(
       background-color: #4CAF50;
       border: none;
       color: white;
-      padding: 16px 32px;
+      padding: 14px 25px;
       text-decoration: none;
       -webkit-appearance: none;
       margin: 4px 2px;
       cursor: pointer;
     }
-    h2 {font-size: 2.3rem;}
-    h3 {font-size: 1.3rem;}
+    h2 {font-size: 2.3rem;
+        margin-top: 0.50em;
+        margin-bottom: 0.30em;
+    }
+    h3 {font-size: 1.3rem;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
     p {font-size: 1.9rem;}
     .label {
       display: inline-block; 
       text-align: left; 
-      width: 100px;
+      width: 80px;
     }
     body {
       max-width: 400px; 
@@ -84,19 +90,19 @@ const char index_html[] PROGMEM = R"rawliteral(
   </style>
 </head>
 <body>
-  <h2>FRC Training Bot</h2>
+  <h2>FRC BabyBot</h2>
   <h3>Lesson 4</h3>
   <div class='container'>
     <h4 class='label'>Move (seconds)</h4>
     %BUTTONPLACEHOLDER1%
   </div> 
   <p></p>
-  <span>Adjust Left Speed </span>
+  <span>Adjust Left Power </span>
     <span id='textSliderValueLeft'>%SLIDERVALUE1%</span>
     <div class='slidercontainer'>  
       <input type='range' onchange='updateSliderLeft(this)' id='pwmSliderLeft' min='-1' max='1' value='%SLIDERVALUE1%' step='0.1' class='slider'>
     </div>
-    <span>Adjust Right Speed </span>
+    <span>Adjust Right Power </span>
     <span id='textSliderValueRight'>%SLIDERVALUE2%</span>
     <div class='slidercontainer'>  
       <input type='range' onchange='updateSliderRight(this)' id='pwmSliderRight' min='-1' max='1' value='%SLIDERVALUE2%' step='0.1' class='slider'>

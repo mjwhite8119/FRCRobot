@@ -57,6 +57,11 @@ class DCMotor
     int32_t getPulses() const {return encoder.pulses;}
 
     /**
+     * Returns the current total number pulses per second.
+     */
+    int32_t getCurrentPulsesPerSecond() const {return currentPulsesPerSec_;}
+
+    /**
      * Returns the current number of pulses per second.
      */
     int32_t getAvgPulsesPerSecond() const {return avgPulsesPerSec_;}
@@ -79,6 +84,8 @@ class DCMotor
     const int kStaticPWM_ = 160; // Minimum PWM required to get the motor moving
     const int kVelocityPWM_ = (maxPWM_ - kStaticPWM_); // Additional PWM to maintain the requested velocity
     int feedForwardPWM_ = 0; // Total value to keep the robot moving at the requested velocity
+    int32_t lastPulses_ = 0; // Saved pulses from the last time period 
+    int32_t currentPulsesPerSec_ = 0; // Current pulses per second
 
     /**
      * Set motor power. This function is run every 25ms from the timer interrupt

@@ -21,10 +21,15 @@ void Command::initialize() {
   lastLeftPulses_ = robot_.driveTrain.leftWheel.motor.getPulses();
   lastRightPulses_ = robot_.driveTrain.rightWheel.motor.getPulses();
 
+  // Used to keep track of the max velocity reached during current command
+  maxLeftVelocity_ = 0;
+  maxRightVelocity_ = 0;
+
   // Display labels to the OLED
   clearDisplayBelowHeader();
   drawText(1, 0, "L");
-  drawText(1, 50, "R");
+  drawText(1, 40, "R");
+  drawText(1, 80, "Vel. p/s");
 
   digitalWrite(LED_BUILTIN, HIGH);
 }
@@ -39,15 +44,21 @@ void Command::execute() {
     commandFinished = true;
   }
 
-  // Get the number of pulses from each encoder
-  const int currentLeftPulses = robot_.driveTrain.leftWheel.motor.getPulses();
-  const int currentRightPulses = robot_.driveTrain.rightWheel.motor.getPulses();
-  const int leftPulses = currentLeftPulses - lastLeftPulses_;
-  const int rightPulses = currentRightPulses - lastRightPulses_; 
-  
-  // Display pulses for this command to the OLED
-  drawText(1, 10, String(leftPulses));
-  drawText(1, 60, String(rightPulses));
+  // Get the linear velocity from each encoder
+  float leftVelocityPerSecond = robot_.driveTrain.leftWheel.getVelocityPerSecond();
+  float rightVelocityPerSecond = robot_.driveTrain.rightWheel.getVelocityPerSecond();
+
+  // Display velocity per second to the OLED
+  drawText(1, 10, String(leftVelocityPerSecond));
+  drawText(1, 50, String(rightVelocityPerSecond));
+
+  // Log the max velocity reached during this command
+  if (leftVelocityPerSecond > maxLeftVelocity_) {
+    maxLeftVelocity_ = leftVelocityPerSecond;
+  }
+  if (rightVelocityPerSecond > maxRightVelocity_) {
+    maxRightVelocity_ = rightVelocityPerSecond;
+  }
 }
 
 // -------------------------------------------------------------
@@ -61,15 +72,20 @@ void Command::end() {
     // Turn off the LED
     digitalWrite(LED_BUILTIN, LOW);
 
-    // Get the number of pulses from each encoder
-    int leftPulsesPerSecond = robot_.driveTrain.leftWheel.motor.getAvgPulsesPerSecond();
-    int rightPulsesPerSecond = robot_.driveTrain.rightWheel.motor.getAvgPulsesPerSecond();
-    
-    // Display pulses per second for this command to the OLED
+    // Get the linear velocity from each encoder
+    float leftVelocityPerSecond = robot_.driveTrain.leftWheel.getVelocityPerSecond();
+    float rightVelocityPerSecond = robot_.driveTrain.rightWheel.getVelocityPerSecond();
+
+    // Display final velocity per second to the OLED
+    drawText(1, 10, String(leftVelocityPerSecond));
+    drawText(1, 50, String(rightVelocityPerSecond));
+
+    // // Display the max velocity for this command to the OLED
     drawText(2, 0, "L");
-    drawText(2, 10, String(leftPulsesPerSecond));
-    drawText(2, 50, "R");
-    drawText(2, 60, String(rightPulsesPerSecond));
+    drawText(2, 10, String(maxLeftVelocity_));
+    drawText(2, 40, "R");
+    drawText(2, 50, String(maxRightVelocity_));
+    drawText(2, 80, "Max vel.");
 
     digitalWrite(LED_BUILTIN, LOW);
 

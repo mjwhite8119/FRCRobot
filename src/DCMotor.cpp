@@ -30,7 +30,7 @@ DCMotor::DCMotor(const uint8_t pinGroup)
     {
       const esp_timer_create_args_t periodic_timer_args = {.callback = &motorISR0};
       esp_timer_create(&periodic_timer_args, &motorTimer0);
-      esp_timer_start_periodic(motorTimer0, speedCtrlPeriodMicros); // Time in milliseconds (50)
+      esp_timer_start_periodic(motorTimer0, speedCtrlPeriodMicros); // Time in milliseconds (100)
       instances [0] = this; 
     }
     break;
@@ -39,7 +39,7 @@ DCMotor::DCMotor(const uint8_t pinGroup)
     {
       const esp_timer_create_args_t periodic_timer_args = {.callback = &motorISR1};
       esp_timer_create(&periodic_timer_args, &motorTimer1);
-      esp_timer_start_periodic(motorTimer1, speedCtrlPeriodMicros); // Time in milliseconds (50)
+      esp_timer_start_periodic(motorTimer1, speedCtrlPeriodMicros); // Time in milliseconds (100)
       instances [1] = this;
     }
     break;
@@ -58,6 +58,7 @@ void DCMotor::setSpeed(const float wheelSpeed,
 
   // Save the pulses at the start of this request                     
   startingPulses_ = encoder.getPulses(); 
+  lastPulses_ = encoder.getPulses(); 
 
   // Set the timeout to stop the motor
   timeOut_ = timeOut;
@@ -84,7 +85,7 @@ void DCMotor::setSpeed(const float wheelSpeed,
 }  
 
 // ----------------------------------------------------------------
-// Set motor power using a PID loop
+// Set motor power.  Runs 10 times per second
 // ---------------------------------------------------------------- 
 void IRAM_ATTR DCMotor::setPower_() {
 
@@ -103,9 +104,14 @@ void IRAM_ATTR DCMotor::setPower_() {
       timeOut_ = 0;
     }
   }  
-
+  
   // Apply the power with the direction and PWM signal
   applyPower_(direction_, PWM_);
+
+  // Calculate pulses per second
+  int32_t pulses = encoder.getPulses();
+  currentPulsesPerSec_ = abs(pulses - lastPulses_) * periodsPerSec;
+  lastPulses_ = pulses;
   
   portEXIT_CRITICAL_ISR(&timerMux);
 }
