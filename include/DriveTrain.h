@@ -2,6 +2,8 @@
 #define _DRIVE_TRAIN_H_
 
 #include "Wheel.h"
+#include "DifferentialDriveWheelSpeeds.h"
+#include "ChassisSpeeds.h"
 
 class DriveTrain
 {
@@ -16,6 +18,8 @@ class DriveTrain
     Wheel leftWheel = Wheel(leftWheelPinGroup); // Attach the left wheel
     Wheel rightWheel = Wheel(rightWheelPinGroup); // Attach the right wheel
 
+    float trackWidth = 0.140; // Distance between wheels in meters
+
     /**
      * Sets the direction and wheel speed for the motors.
      *
@@ -29,6 +33,34 @@ class DriveTrain
     {  
       leftWheel.motor.setSpeed(leftWheelSpeed, timeOut); 
       rightWheel.motor.setSpeed(rightWheelSpeed, timeOut); 
+    }
+
+    /**
+     * Returns the left and right wheel speeds into the
+     * structure DifferentialDriveWheelSpeeds
+     * 
+     * @return left and right wheel speeds
+     */
+    DifferentialDriveWheelSpeeds getWheelSpeeds () 
+    {
+      // Get the linear velocity from each wheel
+      return {leftWheel.getVelocityPerSecond(),
+              rightWheel.getVelocityPerSecond()};     
+    }
+
+    /**
+     * Returns a chassis speed from left and right component velocities using
+     * forward kinematics.
+     *
+     * @param wheelSpeeds The left and right velocities.
+     * @return The chassis speed.
+     */
+    ChassisSpeeds toChassisSpeeds() 
+    {
+      DifferentialDriveWheelSpeeds wheelSpeeds = getWheelSpeeds();
+      return {(wheelSpeeds.left + wheelSpeeds.right) / 2.0, 
+              0,
+              (wheelSpeeds.right - wheelSpeeds.left) / trackWidth * 1};
     }
 
     /**

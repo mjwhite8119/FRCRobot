@@ -80,8 +80,8 @@ class Command
       int32_t lastRightPulses_; // Right encoder pulses
 
       // Variables added in lesson 4
-      float maxLeftVelocity_ = 0; // Max left wheel speed reached during this command.
-      float maxRightVelocity_ = 0; // Max right wheel speed reached during this command.
+      float maxVx_ = 0; // Max linear speed reached during this command.
+      float maxOmega_ = 0; // Max angular wheel speed reached during this command.
 
 };
 

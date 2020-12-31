@@ -22,14 +22,13 @@ void Command::initialize() {
   lastRightPulses_ = robot_.driveTrain.rightWheel.motor.getPulses();
 
   // Used to keep track of the max velocity reached during current command
-  maxLeftVelocity_ = 0;
-  maxRightVelocity_ = 0;
+  maxVx_ = 0;
+  maxOmega_ = 0;
 
   // Display labels to the OLED
   clearDisplayBelowHeader();
-  drawText(1, 0, "L");
-  drawText(1, 40, "R");
-  drawText(1, 80, "Vel. p/s");
+  drawText(1, 0, "Vx");
+  drawText(1, 60, "Omega");
 
   digitalWrite(LED_BUILTIN, HIGH);
 }
@@ -44,20 +43,19 @@ void Command::execute() {
     commandFinished = true;
   }
 
-  // Get the linear velocity from each encoder
-  float leftVelocityPerSecond = robot_.driveTrain.leftWheel.getVelocityPerSecond();
-  float rightVelocityPerSecond = robot_.driveTrain.rightWheel.getVelocityPerSecond();
+  // Get the linear and angular velocity of the Chassis
+  ChassisSpeeds chassisSpeed = robot_.driveTrain.toChassisSpeeds();
 
   // Display velocity per second to the OLED
-  drawText(1, 10, String(leftVelocityPerSecond));
-  drawText(1, 50, String(rightVelocityPerSecond));
+  drawText(1, 15, String(chassisSpeed.vx));
+  drawText(1, 75, String(chassisSpeed.omega));
 
   // Log the max velocity reached during this command
-  if (leftVelocityPerSecond > maxLeftVelocity_) {
-    maxLeftVelocity_ = leftVelocityPerSecond;
+  if (chassisSpeed.vx > maxVx_) {
+    maxVx_ = chassisSpeed.vx;
   }
-  if (rightVelocityPerSecond > maxRightVelocity_) {
-    maxRightVelocity_ = rightVelocityPerSecond;
+  if (chassisSpeed.omega > maxOmega_) {
+    maxOmega_ = chassisSpeed.omega;
   }
 
 }
@@ -73,20 +71,18 @@ void Command::end() {
     // Turn off the LED
     digitalWrite(LED_BUILTIN, LOW);
 
-    // Get the linear velocity from each encoder
-    float leftVelocityPerSecond = robot_.driveTrain.leftWheel.getVelocityPerSecond();
-    float rightVelocityPerSecond = robot_.driveTrain.rightWheel.getVelocityPerSecond();
+    // Get the linear and angular velocity of the Chassis
+    ChassisSpeeds chassisSpeed = robot_.driveTrain.toChassisSpeeds();
 
     // Display final velocity per second to the OLED
-    drawText(1, 10, String(leftVelocityPerSecond));
-    drawText(1, 50, String(rightVelocityPerSecond));
+    drawText(1, 15, String(chassisSpeed.vx));
+    drawText(1, 75, String(chassisSpeed.omega));
 
     // // Display the max velocity for this command to the OLED
-    drawText(2, 0, "L");
-    drawText(2, 10, String(maxLeftVelocity_));
-    drawText(2, 40, "R");
-    drawText(2, 50, String(maxRightVelocity_));
-    drawText(2, 80, "Max vel.");
+    drawText(1, 0, "Vx");
+    drawText(2, 15, String(maxVx_));
+    drawText(1, 60, "Omega");
+    drawText(2, 75, String(maxOmega_));
 
     digitalWrite(LED_BUILTIN, LOW);
 
