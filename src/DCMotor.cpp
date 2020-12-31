@@ -104,14 +104,18 @@ void IRAM_ATTR DCMotor::setPower_() {
       timeOut_ = 0;
     }
   }  
-  
+  else {
+
+    // Calculate pulses per second
+    int32_t pulses = encoder.getPulses();
+    const int32_t pulsesThisPeriod = abs(pulses - lastPulses_);
+    currentPulsesPerSec_ = pulsesThisPeriod * periodsPerSec;
+    // Save the last pulses
+    lastPulses_ = pulses;
+  }
+
   // Apply the power with the direction and PWM signal
   applyPower_(direction_, PWM_);
-
-  // Calculate pulses per second
-  int32_t pulses = encoder.getPulses();
-  currentPulsesPerSec_ = abs(pulses - lastPulses_) * periodsPerSec;
-  lastPulses_ = pulses;
   
   portEXIT_CRITICAL_ISR(&timerMux);
 }
