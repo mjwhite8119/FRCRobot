@@ -24,7 +24,8 @@ class Wheel
      * Returns the current velocity per second.
      */
     float getVelocityPerSecond() 
-      {return (distancePerPulse * motor.getCurrentPulsesPerSecond());}    
+      {return (distancePerPulse * motor.getCurrentPulsesPerSecond());}  
+
 
     // -------------------- Member variables -----------------  
     DCMotor motor;

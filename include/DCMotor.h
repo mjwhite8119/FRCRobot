@@ -60,7 +60,7 @@ class DCMotor
     int32_t getCurrentPulsesPerSecond() const {return currentPulsesPerSec_;}
 
     /**
-     * Returns the number of pulses per second.
+     * Returns the current number of pulses per second.
      */
     int32_t getAvgPulsesPerSecond() const {return avgPulsesPerSec_;}
 

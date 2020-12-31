@@ -97,12 +97,12 @@ const char index_html[] PROGMEM = R"rawliteral(
     %BUTTONPLACEHOLDER1%
   </div> 
   <p></p>
-  <span>Adjust Left Speed </span>
+  <span>Adjust Left Power </span>
     <span id='textSliderValueLeft'>%SLIDERVALUE1%</span>
     <div class='slidercontainer'>  
       <input type='range' onchange='updateSliderLeft(this)' id='pwmSliderLeft' min='-1' max='1' value='%SLIDERVALUE1%' step='0.1' class='slider'>
     </div>
-    <span>Adjust Right Speed </span>
+    <span>Adjust Right Power </span>
     <span id='textSliderValueRight'>%SLIDERVALUE2%</span>
     <div class='slidercontainer'>  
       <input type='range' onchange='updateSliderRight(this)' id='pwmSliderRight' min='-1' max='1' value='%SLIDERVALUE2%' step='0.1' class='slider'>

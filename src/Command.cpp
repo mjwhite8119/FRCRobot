@@ -28,7 +28,7 @@ void Command::initialize() {
   // Display labels to the OLED
   clearDisplayBelowHeader();
   drawText(1, 0, "Vx");
-  drawText(1, 60, "Omega");
+  drawText(1, 50, "Omega");
 
   digitalWrite(LED_BUILTIN, HIGH);
 }
@@ -46,9 +46,12 @@ void Command::execute() {
   // Get the linear and angular velocity of the Chassis
   ChassisSpeeds chassisSpeed = robot_.driveTrain.toChassisSpeeds();
 
+  // Convert omega to whole degrees
+  int omega = (int)(chassisSpeed.omega * RAD_TO_DEG);
+
   // Display velocity per second to the OLED
   drawText(1, 15, String(chassisSpeed.vx));
-  drawText(1, 75, String(chassisSpeed.omega));
+  drawText(1, 85, String(omega));
 
   // Log the max velocity reached during this command
   if (chassisSpeed.vx > maxVx_) {
@@ -74,15 +77,20 @@ void Command::end() {
     // Get the linear and angular velocity of the Chassis
     ChassisSpeeds chassisSpeed = robot_.driveTrain.toChassisSpeeds();
 
+    // Convert omega to whole degrees
+    int omega = (int)(chassisSpeed.omega * RAD_TO_DEG);
+
     // Display final velocity per second to the OLED
     drawText(1, 15, String(chassisSpeed.vx));
-    drawText(1, 75, String(chassisSpeed.omega));
+    drawText(1, 85, String(omega));
 
-    // // Display the max velocity for this command to the OLED
-    drawText(1, 0, "Vx");
+    // Display the max velocity for this command to the OLED
+    // Convert omega to whole degrees
+    int maxOmega = (int)(maxOmega_ * RAD_TO_DEG);
+
     drawText(2, 15, String(maxVx_));
-    drawText(1, 60, "Omega");
-    drawText(2, 75, String(maxOmega_));
+    drawText(2, 85, String(maxOmega));
+    drawText(2, 110, "Max");
 
     digitalWrite(LED_BUILTIN, LOW);
 
