@@ -122,6 +122,8 @@ void IRAM_ATTR DCMotor::setPower_() {
     // Save the last pulses
     lastPulses_ = pulses;
   
+    //  ------------ PID Code ----------------- //
+    
     // Compute the error between requested pulses/sec and actual pulses/sec
     const int error = abs(pulseSetpoint_) - currentPulsesPerSec_; 
     

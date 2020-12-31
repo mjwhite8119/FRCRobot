@@ -89,7 +89,7 @@ void Command::end() {
     int maxOmega = (int)(maxOmega_ * RAD_TO_DEG);
 
     drawText(2, 15, String(maxVx_));
-    drawText(2, 85, String(omega));
+    drawText(2, 85, String(maxOmega));
     drawText(2, 110, "Max");
 
     digitalWrite(LED_BUILTIN, LOW);
