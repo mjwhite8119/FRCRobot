@@ -30,7 +30,7 @@ DCMotor::DCMotor(const uint8_t pinGroup)
     {
       const esp_timer_create_args_t periodic_timer_args = {.callback = &motorISR0};
       esp_timer_create(&periodic_timer_args, &motorTimer0);
-      esp_timer_start_periodic(motorTimer0, speedCtrlPeriodMicros); // Time in milliseconds (50)
+      esp_timer_start_periodic(motorTimer0, speedCtrlPeriodMicros); // Time in milliseconds (100)
       instances [0] = this; 
     }
     break;
@@ -39,7 +39,7 @@ DCMotor::DCMotor(const uint8_t pinGroup)
     {
       const esp_timer_create_args_t periodic_timer_args = {.callback = &motorISR1};
       esp_timer_create(&periodic_timer_args, &motorTimer1);
-      esp_timer_start_periodic(motorTimer1, speedCtrlPeriodMicros); // Time in milliseconds (50)
+      esp_timer_start_periodic(motorTimer1, speedCtrlPeriodMicros); // Time in milliseconds (100)
       instances [1] = this;
     }
     break;
@@ -91,7 +91,7 @@ void DCMotor::setSpeed(const float wheelSpeed,
 }  
 
 // ----------------------------------------------------------------
-// Set motor power using a PID loop
+// Set motor power.  Runs 10 times per second
 // ---------------------------------------------------------------- 
 void IRAM_ATTR DCMotor::setPower_() {
 

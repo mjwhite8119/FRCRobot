@@ -76,12 +76,12 @@ class Command
       Robot & robot_;
 
       // Variables added in lesson 3
-      int32_t lastLeftPulses_; // Left encoder pulses
-      int32_t lastRightPulses_; // Right encoder pulses
+      double lastLeftPulses_; // Left encoder pulses
+      double lastRightPulses_; // Right encoder pulses
 
       // Variables added in lesson 4
-      float maxLeftVelocity_ = 0; // Max left wheel speed reached during this command.
-      float maxRightVelocity_ = 0; // Max right wheel speed reached during this command.
+      float maxVx_ = 0; // Max linear wheel speed reached during this command.
+      float maxOmega_ = 0; // Max angular wheel speed reached during this command.
 
 };
 
