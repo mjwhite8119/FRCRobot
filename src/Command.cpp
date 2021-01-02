@@ -6,8 +6,6 @@
 void Command::initialize() {
 
   // Start the motors
-  
-  Serial.print("Move ");
   robot_.move(period, leftSpeed, rightSpeed);
   
   // The command is now running and not finished
@@ -17,24 +15,17 @@ void Command::initialize() {
   // Command is now running so no longer need to schedule
   commandSchedule = false; 
 
-  // Save the number of pulses so far
-  lastLeftPulses_ = robot_.driveTrain.leftWheel.motor.getPulses();
-  lastRightPulses_ = robot_.driveTrain.rightWheel.motor.getPulses();
-
-  // Used to keep track of the max velocity reached during current command
-  maxVx_ = 0;
-  maxOmega_ = 0;
-
   // Display labels to the OLED
   clearDisplayBelowHeader();
-  drawText(1, 0, "Vx");
-  drawText(1, 50, "Omega");
+  drawText(1, 0, "Heading");
+  drawText(1, 70, "degrees");
 
   digitalWrite(LED_BUILTIN, HIGH);
 }
 
 // -----------------------------------------------------------
 // Handles tasks to be performed while the command is running.
+// This is called from the main loop.
 // ----------------------------------------------------------- 
 void Command::execute() {
 
@@ -43,23 +34,13 @@ void Command::execute() {
     commandFinished = true;
   }
 
-  // Get the linear and angular velocity of the Chassis
-  ChassisSpeeds chassisSpeed = robot_.driveTrain.toChassisSpeeds();
+  // Get the gyro rotation angle from the IMU
+  Rotation2d heading = robot_.driveTrain.getRobotRotation();
+  
+  log_d("yaw %2.0f", heading.Degrees());
+  // log_d("yaw Radians %2.0f", heading.Radians());
 
-  // Convert omega to whole degrees
-  int omega = (int)(chassisSpeed.omega * RAD_TO_DEG);
-
-  // Display velocity per second to the OLED
-  drawText(1, 15, String(chassisSpeed.vx));
-  drawText(1, 85, String(omega));
-
-  // Log the max velocity reached during this command
-  if (chassisSpeed.vx > maxVx_) {
-    maxVx_ = chassisSpeed.vx;
-  }
-  if (chassisSpeed.omega > maxOmega_) {
-    maxOmega_ = chassisSpeed.omega;
-  }
+  drawText(1, 50, String((int)heading.Degrees()));
 
 }
 
@@ -72,26 +53,6 @@ void Command::end() {
   if (commandRunning) { 
 
     // Turn off the LED
-    digitalWrite(LED_BUILTIN, LOW);
-
-    // Get the linear and angular velocity of the Chassis
-    ChassisSpeeds chassisSpeed = robot_.driveTrain.toChassisSpeeds();
-
-    // Convert omega to whole degrees
-    int omega = (int)(chassisSpeed.omega * RAD_TO_DEG);
-
-    // Display final velocity per second to the OLED
-    drawText(1, 15, String(chassisSpeed.vx));
-    drawText(1, 85, String(omega));
-
-    // Display the max velocity for this command to the OLED
-    // Convert omega to whole degrees
-    int maxOmega = (int)(maxOmega_ * RAD_TO_DEG);
-
-    drawText(2, 15, String(maxVx_));
-    drawText(2, 85, String(maxOmega));
-    drawText(2, 110, "Max");
-
     digitalWrite(LED_BUILTIN, LOW);
 
     // Now we're completely done and the command so no longer running

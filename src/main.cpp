@@ -82,6 +82,8 @@ void setup() {
   // Setup the controller webpage
   setupController(command);
 
+  robot.driveTrain.imu.initMPU6050();
+
 }
 
 // ----------------------------------------------------------

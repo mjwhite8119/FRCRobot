@@ -91,7 +91,7 @@ const char index_html[] PROGMEM = R"rawliteral(
 </head>
 <body>
   <h2>FRC BabyBot</h2>
-  <h3>Lesson 5</h3>
+  <h3>Lesson 6</h3>
   <div class='container'>
     <h4 class='label'>Move (seconds)</h4>
     %BUTTONPLACEHOLDER1%

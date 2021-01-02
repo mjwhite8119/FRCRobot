@@ -4,6 +4,9 @@
 #include "Wheel.h"
 #include "DifferentialDriveWheelSpeeds.h"
 #include "ChassisSpeeds.h"
+#include "IMU.h"
+
+#include "frc/Rotation2d.h"
 
 class DriveTrain
 {
@@ -19,6 +22,9 @@ class DriveTrain
     Wheel rightWheel = Wheel(rightWheelPinGroup); // Attach the right wheel
 
     float trackWidth = 0.140; // Distance between wheels in meters
+
+    // IMU of the robot
+    IMU imu;
 
     /**
      * Sets the direction and wheel speed for the motors.
@@ -64,6 +70,18 @@ class DriveTrain
     }
 
     /**
+     * Gets the robot heading from the IMU
+     * 
+     * @return Rotation2d object that includes the robot heading
+     */
+    Rotation2d getRobotRotation() {
+      imu.update();
+      float heading = imu.getRotationRadians();
+      if (heading < 0.0) {heading += TWO_PI;}
+      return Rotation2d(heading); 
+    };
+
+    /**
      * Returns true if the motors are running
      * 
      * @return true/false - Depending on the state of the motors
@@ -82,6 +100,8 @@ class DriveTrain
      * @return true/false - Depending on the state of the motors
      */
     bool inActive() { return !active(); }
+
+  private:
 
 };
 
