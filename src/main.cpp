@@ -82,7 +82,24 @@ void setup() {
   // Setup the controller webpage
   setupController(command);
 
+  // Initialize the IMU
   robot.driveTrain.imu.initMPU6050();
+
+  // Get the offset of the gyro.  The gyro takes a few
+  // seconds to settle. So wait a little.
+  clearDisplayBelowHeader();
+  for (int i=10; i > 0; i--) {
+    drawText(2, 0, "Settling gyro");
+    drawText(2, 90, String(i));
+    delay(1000);
+  } 
+  robot.driveTrain.setGyroOffset();
+
+  // Display the gyro offset
+  clearDisplayBelowHeader();
+  drawText(2, 0, "Gyro offset");
+  float offset = robot.driveTrain.getGyroOffset().Degrees();
+  drawText(2, 70, String((int)offset));
 
 }
 

@@ -16,7 +16,7 @@ void Command::initialize() {
   commandSchedule = false; 
 
   // Display labels to the OLED
-  clearDisplayBelowHeader();
+  // clearDisplayBelowHeader();
   drawText(1, 0, "Heading");
   drawText(1, 70, "degrees");
 
@@ -35,10 +35,15 @@ void Command::execute() {
   }
 
   // Get the gyro rotation angle from the IMU
-  Rotation2d heading = robot_.driveTrain.getRobotRotation();
-  
+  Rotation2d heading = robot_.driveTrain.getRobotRotation(); 
   log_d("yaw %2.0f", heading.Degrees());
-  // log_d("yaw Radians %2.0f", heading.Radians());
+
+  Rotation2d offset = robot_.driveTrain.getGyroOffset();
+  log_d("offset %2.0f", offset.Degrees());
+
+  // Subtract the gyro offset
+  heading -= robot_.driveTrain.getGyroOffset();
+  log_d("yaw - offset %2.0f", heading.Degrees());
 
   drawText(1, 50, String((int)heading.Degrees()));
 

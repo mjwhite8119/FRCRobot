@@ -82,6 +82,25 @@ class DriveTrain
     };
 
     /**
+     * Set the initial heading of the robot
+     *
+     */
+    void setGyroOffset() {
+      Rotation2d offset = getRobotRotation();
+      log_d("Set Offset... %2.0f", offset.Degrees());
+
+      gyroOffset_ += offset;
+      log_d("Set Offset... %2.0f", gyroOffset_.Degrees());
+    }
+
+    /**
+     * Gets the offset of the Gryo
+     * 
+     * @return Rotation2d object that includes the gyro offset
+     */
+    Rotation2d getGyroOffset() { return gyroOffset_; }  
+
+    /**
      * Returns true if the motors are running
      * 
      * @return true/false - Depending on the state of the motors
@@ -102,7 +121,7 @@ class DriveTrain
     bool inActive() { return !active(); }
 
   private:
-
+    Rotation2d gyroOffset_; // The initial offset of the robot heading
 };
 
 #endif // _DRIVE_TRAIN_H_

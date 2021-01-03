@@ -193,10 +193,10 @@ void IMU::initMPU6050(void)
   // log_d(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
 
   // load and configure the DMP
-  log_e("Initializing DMP...");
+  log_d("Initializing DMP...");
   devStatus = mpu.dmpInitialize();
 
-  log_e("Setting offsets:");
+  log_d("Setting offsets:");
 
   // ----------------- Calibrate sensors -------------------------------------//
   // Calibrating needs to be calibrated at each power cycle.
@@ -214,21 +214,21 @@ void IMU::initMPU6050(void)
     mpu.setZAccelOffset(accBiasZ); // 1688 factory default for my test chip
 
     // Log offsets to console
-    log_e("accBiasX %d", accBiasX); 
-    log_e("accBiasY %d", accBiasY); 
-    log_e("accBiasZ %d", accBiasZ); 
-    log_e("gyroBiasX %d", gyroBiasX); 
-    log_e("gyroBiasY %d", gyroBiasY); 
-    log_e("gyroBiasZ %d", gyroBiasZ); 
+    log_d("accBiasX %d", accBiasX); 
+    log_d("accBiasY %d", accBiasY); 
+    log_d("accBiasZ %d", accBiasZ); 
+    log_d("gyroBiasX %d", gyroBiasX); 
+    log_d("gyroBiasY %d", gyroBiasY); 
+    log_d("gyroBiasZ %d", gyroBiasZ); 
   #endif
 
   if (devStatus == 0) {
     // turn on the DMP, now that it's ready
-    // log_eln("Enabling DMP...");
+    // log_dln("Enabling DMP...");
     mpu.setDMPEnabled(true);
 
     // set our DMP Ready flag so the main loop() function knows it's okay to use it
-    // log_eln("DMP ready! Waiting for first interrupt...");
+    // log_dln("DMP ready! Waiting for first interrupt...");
     dmpReady = true;
 
     // get expected DMP packet size for later comparison
@@ -239,7 +239,7 @@ void IMU::initMPU6050(void)
   
   } else {
     // ERROR!
-    log_e("DMP Initialization failed code ");
+    log_d("DMP Initialization failed code ");
   }
 
 }
@@ -258,9 +258,9 @@ IMU::EulerAngles IMU::getEulerAngles() {
   float yaw = -( (euler[YAW]) - yaw_zero_offset);  // Yaw (inverted)
   const float pitch = euler[PITCH];  // Pitch
   const float roll = euler[ROLL];  // Roll
-  log_e("YAW (radians) %2.2f", yaw); 
-  log_e("YAW (degrees) %2.0f", yaw * RAD_TO_DEG);
-  log_e("LASTYAW %2.2f", lastYaw); 
+  // log_d("YAW (radians) %2.2f", yaw); 
+  // log_d("YAW (degrees) %2.0f", yaw * RAD_TO_DEG);
+  // log_d("LASTYAW %2.2f", lastYaw); 
 
   // Keep the angle sign the same
   // if ( sgn(lastYaw) != sgn(yaw) ) {
