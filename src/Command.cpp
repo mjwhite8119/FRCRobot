@@ -18,8 +18,8 @@ void Command::initialize() {
   commandSchedule = false; 
 
   // Save the number of pulses so far
-  lastLeftPulses_ = robot_.driveTrain.leftWheel.motor.getPulses();
-  lastRightPulses_ = robot_.driveTrain.rightWheel.motor.getPulses();
+  // lastLeftPulses_ = robot_.driveTrain.leftWheel.motor.getPulses();
+  // lastRightPulses_ = robot_.driveTrain.rightWheel.motor.getPulses();
 
   // Used to keep track of the max velocity reached during current command
   maxVx_ = 0;

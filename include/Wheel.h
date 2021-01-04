@@ -21,11 +21,13 @@ class Wheel
       :motor(pinGroup) {}
 
     /**
-     * Returns the current velocity per second.
+     * Gets the number of encoder pulses per second to 
+     * calulate the linear velocity of the wheel.
+     * 
+     * @return linear velocity per second of the wheel.
      */
     float getVelocityPerSecond() 
       {return (distancePerPulse * motor.getCurrentPulsesPerSecond());}  
-
 
     // -------------------- Member variables -----------------  
     DCMotor motor;
