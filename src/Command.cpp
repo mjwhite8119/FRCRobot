@@ -15,6 +15,10 @@ void Command::initialize() {
   // Command is now running so no longer need to schedule
   commandSchedule = false; 
 
+  // Used to keep track of the max velocity reached during current command
+  maxVx_ = 0;
+  maxOmega_ = 0;
+
   // Display labels to the OLED
   // clearDisplayBelowHeader();
   drawText(1, 0, "Heading");
