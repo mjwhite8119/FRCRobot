@@ -88,7 +88,7 @@ void setup() {
   // Get the offset of the gyro.  The gyro takes a few
   // seconds to settle. So wait a little.
   clearDisplayBelowHeader();
-  for (int i=10; i > 0; i--) {
+  for (int i=9; i > 0; i--) {
     drawText(2, 0, "Settling gyro");
     drawText(2, 90, String(i));
     delay(1000);
@@ -100,6 +100,16 @@ void setup() {
   drawText(2, 0, "Gyro offset");
   float offset = robot.driveTrain.getGyroOffset().Degrees();
   drawText(2, 70, String((int)offset));
+
+  // Display the current heading adjusted for offset
+  Rotation2d heading = robot.driveTrain.getRobotRotation(); 
+
+  // Subtract the gyro offset
+  heading -= robot.driveTrain.getGyroOffset();
+
+  drawText(1, 0, "Heading");
+  drawText(1, 50, String((int)heading.Degrees()));
+  drawText(1, 70, "degrees");
 
 }
 

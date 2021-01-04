@@ -19,11 +19,6 @@ void Command::initialize() {
   maxVx_ = 0;
   maxOmega_ = 0;
 
-  // Display labels to the OLED
-  // clearDisplayBelowHeader();
-  drawText(1, 0, "Heading");
-  drawText(1, 70, "degrees");
-
   digitalWrite(LED_BUILTIN, HIGH);
 }
 
