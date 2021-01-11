@@ -6,7 +6,7 @@
 void Command::initialize() {
 
   // Start the motors
-  robot_.move(period, leftSpeed, rightSpeed);
+  robot_.move(leftSpeed, rightSpeed);
   
   // The command is now running and not finished
   commandRunning = true;
@@ -15,9 +15,9 @@ void Command::initialize() {
   // Command is now running so no longer need to schedule
   commandSchedule = false; 
 
-  // Used to keep track of the max velocity reached during current command
-  maxVx_ = 0;
-  maxOmega_ = 0;
+  // Set the ending distance.  Current distance + requested distance
+  endingDistance = robot_.driveTrain.getChassisDistance() + distance;
+  log_d("ending distance = %2.1f", endingDistance);
 
   digitalWrite(LED_BUILTIN, HIGH);
 }
@@ -28,23 +28,27 @@ void Command::initialize() {
 // ----------------------------------------------------------- 
 void Command::execute() {
 
-  // If the driveTrain is inactive then the command is finished
-  if (robot_.driveTrain.inActive()) {
+  // Update the odometry
+  robot_.driveTrain.updateOdometry();
+
+  // Keep track of the distance travelled
+  log_d("d2 = %2.1f", robot_.driveTrain.getChassisDistance());
+
+  if (robot_.driveTrain.getChassisDistance() > endingDistance) {  
+    robot_.stop();
     commandFinished = true;
   }
 
-  // Get the gyro rotation angle from the IMU
-  Rotation2d heading = robot_.driveTrain.getRobotRotation(); 
-  log_d("yaw %2.0f", heading.Degrees());
+  // Display current Pose to the OLED
+  Pose2d pose = robot_.driveTrain.odometry.getPose();
 
-  Rotation2d offset = robot_.driveTrain.getGyroOffset();
-  log_d("offset %2.0f", offset.Degrees());
+  drawText(1, 10, String(pose.Translation().X()));
+  drawText(1, 60, String(pose.Translation().Y()));
+  drawText(2, 50, String((int)pose.Rotation().Degrees()));
 
-  // Subtract the gyro offset
-  heading -= robot_.driveTrain.getGyroOffset();
-  log_d("yaw - offset %2.0f", heading.Degrees());
-
-  drawText(1, 50, String((int)heading.Degrees()));
+  log_d("x = %2.1f", pose.Translation().X());
+  log_d("y = %2.1f", pose.Translation().Y());
+  log_d("heading = %2.1f", pose.Rotation().Degrees());
 
 }
 

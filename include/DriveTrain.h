@@ -4,8 +4,9 @@
 #include "Wheel.h"
 #include "IMU.h"
 
-#include "frc/Rotation2d.h"
+#include "frc/geometry/Rotation2d.h"
 #include "frc/DifferentialDriveWheelSpeeds.h"
+#include "frc/DifferentialDriveOdometry.h"
 #include "frc/ChassisSpeeds.h"
 
 class DriveTrain
@@ -26,6 +27,11 @@ class DriveTrain
     // IMU of the robot
     IMU imu;
 
+    // ---------- Setup Odometry -------------
+    Pose2d robotPose{{Translation2d{0,0}}, Rotation2d{0}}; // x = 0, y = 0
+    Rotation2d initialRotation{Rotation2d{0}}; // angle = 0 degrees
+    DifferentialDriveOdometry odometry{initialRotation,robotPose};
+
     /**
      * Sets the direction and wheel speed for the motors.
      *
@@ -39,6 +45,21 @@ class DriveTrain
     {  
       leftWheel.motor.setSpeed(leftWheelSpeed, timeOut); 
       rightWheel.motor.setSpeed(rightWheelSpeed, timeOut); 
+    }
+
+    /**
+     * Sets the distance that the robot should travel.
+     *
+     * @param leftWheelSpeed - Left wheel speed between -1 and +1
+     * @param rightWheelSpeed - Right wheel speed between -1 and +1
+     * @param distance - Distance to travel
+     */
+    void setDistance(const float leftWheelSpeed, 
+                    const float rightWheelSpeed,
+                    const float distance) 
+    {  
+      leftWheel.motor.setSpeed(leftWheelSpeed, maxTimeOut); 
+      rightWheel.motor.setSpeed(rightWheelSpeed, maxTimeOut); 
     }
 
     /**
@@ -100,6 +121,35 @@ class DriveTrain
      */
     Rotation2d getGyroOffset() { return gyroOffset_; }  
 
+
+    /**
+     * Get the total linear X distance travelled since encoder reset.
+     * 
+     */
+    float getChassisDistance() {
+      
+      // Get the distance in meters since the last encoder reset
+      const float leftPosition = leftWheel.currentPosition();
+      const float rightPosition = rightWheel.currentPosition();
+
+      return (leftPosition + rightPosition) / 2;
+    }
+
+    /**
+     * Update the current robot odometry 
+     * 
+     */
+    void updateOdometry() {
+      
+      // Get the distance in meters since the last encoder reset
+      const float leftPosition = leftWheel.currentPosition();
+      const float rightPosition = rightWheel.currentPosition();
+
+      // Takes the absolute distance and rotation and updates odometry pose 
+      // Distance is translated into field relative translation
+      odometry.update(getRobotRotation(), leftPosition, rightPosition);     
+    }
+
     /**
      * Returns true if the motors are running
      * 
@@ -122,6 +172,7 @@ class DriveTrain
 
   private:
     Rotation2d gyroOffset_; // The initial offset of the robot heading
+
 };
 
 #endif // _DRIVE_TRAIN_H_

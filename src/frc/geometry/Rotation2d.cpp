@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#include "frc/Rotation2d.h"
+#include "frc/geometry/Rotation2d.h"
 #include <cmath>
 
 Rotation2d::Rotation2d(float value)

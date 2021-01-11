@@ -22,12 +22,19 @@ class Robot
      * @param leftSpeed - Left wheel speed between -1 and +1
      * @param rightSpeed - Right wheel speed between -1 and +1
      */ 
-    void move(const int period, const float leftSpeed, const float rightSpeed) {
+    void move(const float leftSpeed, const float rightSpeed) {
 
-      // Convert seconds to micro seconds since that's what the timer interrupt wants
-      int timeOut = period*1000;     
-      driveTrain.setWheelSpeeds(leftSpeed, rightSpeed, timeOut);
+      // Also send the max timeout of 10 seconds
+      driveTrain.setWheelSpeeds(leftSpeed, rightSpeed, maxTimeOut);
     }
+
+    /**
+     * Stop robot 
+     */ 
+    void stop() {
+      driveTrain.setWheelSpeeds(0.0, 0.0, 0);
+    }
+
 
 };
 

@@ -24,7 +24,7 @@ class Command
 
     // Command specific variables
     String direction = ""; // Direction backward/forward to move the robot
-    int period = 0; // How long to run the motors
+    float distance = 0; // Distance to move the robot
     float leftSpeed = 0; // Motor left speed between -1 and +1
     float rightSpeed = 0; // Motor right speed between -1 and +1
 
@@ -83,6 +83,8 @@ class Command
       float maxVx_ = 0; // Max linear wheel speed reached during this command.
       float maxOmega_ = 0; // Max angular wheel speed reached during this command.
 
+      // Variables added in lesson 7
+      float endingDistance = 0.0;
 };
 
 #endif // _COMMAND_H_

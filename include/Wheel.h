@@ -21,6 +21,16 @@ class Wheel
       :motor(pinGroup) {}
 
     /**
+     * Gets the current linear position of the wheel since
+     * robot startup
+     * 
+     * @return current linear position of the wheel
+     */
+    float currentPosition() const {
+      return motor.encoder.pulses * distancePerPulse;
+    }
+
+    /**
      * Gets the number of encoder pulses per second to 
      * calulate the linear velocity of the wheel.
      * 

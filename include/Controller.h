@@ -91,9 +91,9 @@ const char index_html[] PROGMEM = R"rawliteral(
 </head>
 <body>
   <h2>FRC BabyBot</h2>
-  <h3>Lesson 6</h3>
+  <h3>Lesson 7</h3>
   <div class='container'>
-    <h4 class='label'>Move (seconds)</h4>
+    <h4 class='label'>Move (meters)</h4>
     %BUTTONPLACEHOLDER1%
   </div> 
   <p></p>
@@ -164,18 +164,18 @@ String processor(const String& var){
  */ 
 void handleMove(AsyncWebServerRequest *request, Command & command)
 {
-  String periodStr = "0";
+  String distanceStr = "0";
 
-  // GET input1 value on <ESP_IP>/update?period=<periodStr>&direction=<direction>
+  // GET input1 value on <ESP_IP>/update?period=<distanceStr>&direction=<direction>
   if (request->hasParam(PARAM_INPUT_1)) {
-    periodStr = request->getParam(PARAM_INPUT_1)->value();    
+    distanceStr = request->getParam(PARAM_INPUT_1)->value();    
   }
 
   // Log value to the console for debugging
-  log_d("period %s", periodStr);
+  log_d("period %s", distanceStr);
 
   // Assign the parameters and schedule the command
-  command.period = periodStr.toInt();
+  command.distance = distanceStr.toInt();
   command.schedule();
 
   request->send(200, "text/plain", "OK");
@@ -222,7 +222,7 @@ void setupController(Command & command){
     request->send_P(200, "text/html", index_html, processor);
   });
 
-  // Send a GET request to <ESP_IP>/update?period=<periodStr>&direction=<direction>
+  // Send a GET request to <ESP_IP>/update?period=<distanceStr>&direction=<direction>
   server.on("/update", HTTP_GET, [&command] (AsyncWebServerRequest *request) { handleMove(request, command); });
 
   // Send a GET request to /slider1?value=<inputMessage>

@@ -19,6 +19,8 @@ static struct MotorPins {
 const int freq = 30000;
 const int resolution = 8;
 
+const int maxTimeOut = 10*1000; // Stops the robot after timeout seconds
+
 //-------------------------------------------------//
 // Function to return the sign of a value
 //-------------------------------------------------//
