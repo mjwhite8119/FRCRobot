@@ -45,7 +45,7 @@ class Robot
      * Stop the robot
      */ 
     void stop() {
-      driveTrain.setWheelSpeeds(0, 0, 0);
+      driveTrain.setWheelSpeeds(1, 1, 0, 0, 0);
       digitalWrite(LED_BUILTIN, LOW);
     }
 };
