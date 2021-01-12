@@ -23,7 +23,7 @@ class Encoder
     explicit Encoder(uint8_t pinGroup);
 
     // Class variables
-    static constexpr int PPR = 20;  // Encoder Count per Revolutions 
+    static constexpr int PPR = 40;  // Encoder Count per Revolutions 
 
     // Mutex for protecting critical code in interrupts
     portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;

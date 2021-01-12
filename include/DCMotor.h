@@ -25,8 +25,6 @@ class DCMotor
     // Encoder attached to the motor
     Encoder encoder;
 
-    // const int maxPulsesPerSecond = 700; 
-
     // Mutex for protecting critical code in interrupts
     portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
      
